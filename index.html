@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agentic Workflow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="css/deck.css">
+</head>
+<body>
+
+<!-- hairline frame with corner crosshairs, decoration only -->
+<div class="frame" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+
+<!-- ======================================================================
+     DECK
+     Slides carry headlines and fragments. Everything you say lives in
+     NOTES.md, one section per slide, numbered to match.
+     ====================================================================== -->
+<main class="deck" id="deck">
+
+  <!-- 1 — Title -->
+  <section class="slide slide--title" data-anim>
+    <span class="rule"></span>
+    <span class="eyebrow">Internal presentation</span>
+    <h1 class="display">My agentic<br><em>workflow</em></h1>
+    <p class="lede">Jira story to pull request.</p>
+    <div class="byline">
+      <span class="avatar">HJ</span>
+      <div>
+        <strong>Henrik Johansson</strong>
+        <span class="muted">Software Engineer in FSP</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 — Chapter 01 -->
+  <section class="slide slide--section" data-anim>
+    <span class="ghost" aria-hidden="true">01</span>
+    <span class="rule"></span>
+    <span class="eyebrow">Chapter one</span>
+    <h2 class="display">The loop</h2>
+  </section>
+
+  <!-- 3 — The loop -->
+  <section class="slide">
+    <header class="slide__head">
+      <span class="eyebrow">01 · The loop</span>
+      <h2>Seven steps, one pass</h2>
+    </header>
+    <ol class="steps steps--bare" data-anim>
+      <li><h3>Feature folder</h3></li>
+      <li><h3>Agent starts there</h3></li>
+      <li><h3>Plan from the story</h3></li>
+      <li><h3>Review the plan</h3></li>
+      <li><h3>Implement</h3></li>
+      <li><h3>Review what came out</h3></li>
+      <li><h3>Commit and ship</h3></li>
+    </ol>
+  </section>
+
+  <!-- 4 — The plan step -->
+  <section class="slide slide--split">
+    <div class="split__text">
+      <header class="slide__head">
+        <span class="eyebrow">01 · The loop</span>
+        <h2>The plan step closes the gaps</h2>
+      </header>
+      <div data-anim>
+        <ul class="ticks">
+          <li>Options for every open question</li>
+          <li>Your own answer, or <strong>"Defer to the team"</strong></li>
+          <li>Decisions and deferrals both recorded</li>
+        </ul>
+      </div>
+    </div>
+    <aside class="split__visual">
+      <div class="card">
+        <div class="card__bar"><span></span><span></span><span></span></div>
+        <div class="card__body">
+          <p class="muted qa__q">Which service owns the retry?</p>
+          <p class="task done">Orders (current behaviour)</p>
+          <p class="task">Dispatch (new endpoint)</p>
+          <p class="task">Your own answer</p>
+          <p class="task active">Defer to the team <span class="badge">stops the run</span></p>
+        </div>
+      </div>
+    </aside>
+  </section>
+
+  <!-- 5 — The Jira gate, mirrored so it does not repeat slide 4 -->
+  <section class="slide slide--split">
+    <aside class="split__visual">
+      <div class="card">
+        <div class="card__bar"><span></span><span></span><span></span></div>
+        <div class="card__body">
+          <span class="eyebrow">VFS-1234 · comment</span>
+          <p class="qa__q">Decisions so far</p>
+          <p class="task done">Retry stays in Orders</p>
+          <p class="task done">No schema change</p>
+          <p class="qa__q">Open questions</p>
+          <p class="task">Who owns the dead-letter queue?</p>
+          <p class="task">Is the old endpoint still in use?</p>
+        </div>
+      </div>
+    </aside>
+    <div class="split__text">
+      <header class="slide__head">
+        <span class="eyebrow">01 · The loop</span>
+        <h2>Outstanding questions stop the run</h2>
+      </header>
+      <div data-anim>
+        <ul class="ticks">
+          <li>Plan saved, marked <code>blocked</code></li>
+          <li>Questions land on the ticket</li>
+          <li>Nothing open, on to the plan review</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 — Review and ship -->
+  <section class="slide">
+    <header class="slide__head">
+      <span class="eyebrow">01 · The loop</span>
+      <h2>Two reviews, then ship</h2>
+    </header>
+    <ul class="bullets" data-anim>
+      <li>
+        <span class="icon">⌕</span>
+        <div><h3>Is the code right?</h3><p><code>/code-review</code>, my own skill.</p></div>
+      </li>
+      <li>
+        <span class="icon">≡</span>
+        <div><h3>Is it what we agreed?</h3><p><code>/jira-review</code>. Every phase landed, nothing extra.</p></div>
+      </li>
+      <li>
+        <span class="icon">↗</span>
+        <div><h3>Then ship it</h3><p><code>/jira-ship</code>. Commits, PRs in merge order, a link on the ticket.</p></div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- 7 — Chapter 02 -->
+  <section class="slide slide--section" data-anim>
+    <span class="ghost" aria-hidden="true">02</span>
+    <span class="rule"></span>
+    <span class="eyebrow">Chapter two</span>
+    <h2 class="display">What makes it work</h2>
+  </section>
+
+  <!-- 8 — The feature folder -->
+  <section class="slide slide--split">
+    <div class="split__text">
+      <header class="slide__head">
+        <span class="eyebrow">02 · What makes it work</span>
+        <h2>One folder, every repo</h2>
+      </header>
+      <div data-anim>
+        <ul class="ticks">
+          <li>One branch name across all of them</li>
+          <li>Main checkouts stay clean</li>
+          <li>Repos can join mid-plan</li>
+          <li>Some change nothing at all</li>
+        </ul>
+      </div>
+    </div>
+    <aside class="split__visual">
+      <div class="card">
+        <div class="card__bar"><span></span><span></span><span></span></div>
+        <div class="card__body">
+          <p class="task active">features/feature-vfs-1234/</p>
+          <p class="task">├─ fsp-marketconfiguration-service</p>
+          <p class="task">├─ fsp-providerdata-service</p>
+          <p class="task">└─ fsp-integration-service</p>
+        </div>
+      </div>
+    </aside>
+  </section>
+
+  <!-- 9 — The agents and how they split work -->
+  <section class="slide slide--split">
+    <div class="split__text">
+      <header class="slide__head">
+        <span class="eyebrow">02 · What makes it work</span>
+        <h2>Sol delegates, then integrates</h2>
+      </header>
+      <div data-anim>
+        <pre class="code"><code>cpyolo</code></pre>
+        <ul class="ticks">
+          <li>Bounded work goes to a worker</li>
+          <li>One per repo, so they cannot collide</li>
+          <li>Sol keeps the reasoning and the diff</li>
+        </ul>
+      </div>
+    </div>
+    <aside class="split__visual">
+      <div class="card">
+        <div class="card__bar"><span></span><span></span><span></span></div>
+        <div class="card__body">
+          <p class="task active">sol <span class="badge">plan in hand</span></p>
+          <p class="task">├─ luna · marketconfiguration</p>
+          <p class="task">├─ luna · providerdata</p>
+          <p class="task">└─ luna · integration</p>
+          <p class="task active">sol → integrate, verify, commit</p>
+        </div>
+      </div>
+    </aside>
+  </section>
+
+  <!-- 10 — Chapter 03 -->
+  <section class="slide slide--section" data-anim>
+    <span class="ghost" aria-hidden="true">03</span>
+    <span class="rule"></span>
+    <span class="eyebrow">Chapter three</span>
+    <h2 class="display">Where it runs</h2>
+  </section>
+
+  <!-- 11 — The sandbox is the boundary -->
+  <section class="slide slide--split">
+    <div class="split__text">
+      <header class="slide__head">
+        <span class="eyebrow">03 · Where it runs</span>
+        <h2>The container sets the limits</h2>
+      </header>
+      <div data-anim>
+        <ul class="ticks">
+          <li>No internet. Proxy, pre-approved domains</li>
+          <li>No AWS access</li>
+          <li>One port, for front-end dev servers</li>
+          <li>Backends run in Rider, outside the box</li>
+        </ul>
+      </div>
+    </div>
+    <aside class="split__visual">
+      <div class="card">
+        <div class="card__bar"><span></span><span></span><span></span></div>
+        <div class="card__body">
+          <p class="task done">read src/Orders/Handler.cs</p>
+          <p class="task done">edit src/Orders/Handler.cs</p>
+          <p class="task done">run dotnet test</p>
+          <p class="task active">git commit</p>
+          <p class="task">git push <span class="badge">/jira-ship only</span></p>
+        </div>
+      </div>
+    </aside>
+  </section>
+
+  <!-- 12 — Chapter 04 · Demo -->
+  <section class="slide slide--section" data-anim>
+    <span class="ghost" aria-hidden="true">04</span>
+    <span class="rule"></span>
+    <span class="eyebrow">Chapter four</span>
+    <h2 class="display">Demo</h2>
+    <ul class="ticks">
+      <li>One folder, several repos</li>
+      <li>The plan review</li>
+      <li>A question deferred, the run stops</li>
+    </ul>
+  </section>
+
+  <!-- 13 — What I like -->
+  <section class="slide">
+    <header class="slide__head">
+      <span class="eyebrow">In closing</span>
+      <h2>What I like</h2>
+    </header>
+    <div class="cols" data-anim>
+      <article class="tool">
+        <span class="tool__name">Setup</span>
+        <p>One folder and one command, with every repo in it.</p>
+      </article>
+      <article class="tool">
+        <span class="tool__name">Questions</span>
+        <p>Answered before any code is written, or handed to the team.</p>
+      </article>
+      <article class="tool">
+        <span class="tool__name">Record</span>
+        <p>Open questions land on the ticket, with what was already decided.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- 14 — Closing -->
+  <section class="slide slide--title slide--split">
+    <div class="split__text" data-anim>
+      <span class="rule"></span>
+      <span class="eyebrow cursor">Ready.</span>
+      <h2 class="display">Questions?</h2>
+      <p class="lede">Happy to go deeper on any of it.</p>
+      <p class="muted">henrik.johansson@polestar.com</p>
+    </div>
+    <!-- F, S and P play pong, drawn by js/pong.js -->
+    <aside class="split__visual">
+      <div class="card card--pong">
+        <div class="card__bar"><span></span><span></span><span></span></div>
+        <canvas class="pong" role="img" aria-label="The letters F, S and P playing pong"></canvas>
+      </div>
+    </aside>
+  </section>
+
+</main>
+
+<!-- ======================================================================
+     CHROME — progress, counter, controls
+     ====================================================================== -->
+<div class="progress" aria-hidden="true"><div class="progress__fill" id="progress"></div></div>
+
+<footer class="chrome">
+  <span class="chrome__brand">My agentic workflow</span>
+  <nav class="chrome__nav" aria-label="Slide navigation">
+    <button class="btn" id="prev" aria-label="Previous slide">←</button>
+    <span class="counter"><span id="current">1</span><span class="counter__sep">/</span><span id="total">14</span></span>
+    <button class="btn" id="next" aria-label="Next slide">→</button>
+  </nav>
+</footer>
+
+<button class="hint" id="hint" aria-label="Keyboard shortcuts">?</button>
+<div class="help" id="help" hidden>
+  <div class="help__panel">
+    <h3>Shortcuts</h3>
+    <dl>
+      <dt><kbd>←</kbd> <kbd>→</kbd></dt><dd>Previous / next slide</dd>
+      <dt><kbd>Space</kbd></dt><dd>Next slide</dd>
+      <dt><kbd>Home</kbd> <kbd>End</kbd></dt><dd>First / last slide</dd>
+      <dt><kbd>O</kbd></dt><dd>Overview of all slides</dd>
+      <dt><kbd>F</kbd></dt><dd>Fullscreen</dd>
+      <dt><kbd>T</kbd></dt><dd>Light / dark theme</dd>
+      <dt><kbd>Esc</kbd></dt><dd>Close this panel</dd>
+    </dl>
+    <p class="muted">Swipe left / right on touch screens.</p>
+  </div>
+</div>
+
+<script src="js/deck.js"></script>
+<script src="js/pong.js"></script>
+</body>
+</html>

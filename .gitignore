@@ -1,0 +1,7 @@
+# the original upload; the current files are in agentic-setup/
+agentic-setup.zip
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
