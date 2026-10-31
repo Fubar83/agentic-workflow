@@ -52,7 +52,7 @@ cpyolo           Sol starts in the feature folder
 plan review      you read .working-docs/<jira-key>.md, then tell Sol to implement
 implement        Sol, with Luna workers per repository
 /code-review     correctness (separate skill)
-/jira-review     conformance to the plan
+/jira-review     conformance to the plan; suggestions for instruction files
 /jira-ship       commits, pull requests in landing order, Jira comment
 ```
 
@@ -76,6 +76,7 @@ refinement session, usually without a feature folder.
 | Phase status in the plan | Sol |
 | `/code-review` | You |
 | `jira-review` | You (`/jira-review`), Sol before shipping, or `jira-ship` if it has not run since the last change |
+| Accepting instruction-file suggestions | You |
 | `jira-ship` | You (`/jira-ship`, or ask Sol to ship) |
 | `jira-refine` | You (`/jira-refine`) |
 
@@ -91,6 +92,10 @@ feature folder root.
   `Plan status: blocked on Jira answers`.
 - **Each phase** has a `Status:` of `pending`, `done`, or
   `dropped: <reason>`.
+- **Lessons:** during implementation Sol adds a `Lessons` section: anything
+  that cost a retry and that an instruction file would have prevented.
+  `jira-review` turns it into suggestions for `AGENTS.md` and the other
+  instruction files. Accepted suggestions become their own phase.
 - `jira-plan` writes it. Sol updates phase status. `jira-review` reads it.
   `jira-ship` reads it and adds pull request links.
 

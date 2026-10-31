@@ -70,6 +70,9 @@ the result.
 - State the repository you worked in, the instruction files you read, files
   changed, and commands run with their results.
 - Flag anything affecting another repository or contradicting the plan.
+- Note anything the repository's instruction files would have saved you: a
+  command that turned out to be different, a convention you found by trial,
+  a trap.
 - End with remaining risks and unresolved points.
 
 For reviews, list actionable findings first with file references, and say

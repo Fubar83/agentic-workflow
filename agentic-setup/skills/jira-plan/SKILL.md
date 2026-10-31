@@ -86,11 +86,18 @@ questions.
    `.github/copilot-instructions.md`, relevant `.github/instructions/` and
    `.github/skills/`, `CONTRIBUTING.md`, `README.md`. Note only rules that
    affect the plan. More specific rules take precedence.
-3. Find the controlling code path, nearby tests, affected callers and
+3. Read the architecture decision records (ADRs) in each repository that
+   has them. Look where its instructions say, otherwise in `docs/adr/`,
+   `doc/adr/`, `docs/decisions/`, or `adr/`. Skim the titles or index, then
+   read the ADRs that touch the area being changed. Note each one's status:
+   an accepted ADR binds the plan, and a superseded one names the ADR that
+   replaced it. ADRs in a repository outside the folder, such as a shared
+   architecture repository, are read from main like any other outside read.
+4. Find the controlling code path, nearby tests, affected callers and
    contracts, and the build, test, and lint commands in each repository.
    Identify cross-repository contracts first (APIs, events, schemas, shared
    packages); they determine the order work must land in.
-4. Prefer the smallest workable slice. Do not scan unrelated areas or run
+5. Prefer the smallest workable slice. Do not scan unrelated areas or run
    commands that change state.
 
 ## Interview the user
@@ -107,7 +114,7 @@ Ask only questions whose answers change the plan. Sort each one first:
 - **Blocking:** a wrong answer is expensive or cannot be undone. Schemas and
   migrations, contracts between repositories or teams, ownership of
   behaviour, security and permissions, anything users or other systems can
-  observe.
+  observe, and any departure from an accepted ADR.
 
 If you cannot tell which it is, treat it as blocking.
 
@@ -160,8 +167,10 @@ Each phase includes:
   including records that predate the change; config, feature flags,
   environment variables, and secrets; queues, permissions, and
   infrastructure; logs, metrics, and alerts; performance and cost; behaviour
-  users or other teams will notice; required deploy order. If there are
-  none, write "None".
+  users or other teams will notice; required deploy order; documentation
+  that describes the changed behaviour, such as READMEs, API docs,
+  runbooks, config references, and changelogs. If there are none, write
+  "None".
 - **Dependencies, risks, and edge cases.**
 - **Rollback,** where it is more than reverting the commit.
 - **Verification,** with exact commands where known.
@@ -182,6 +191,29 @@ rediscover:
 - **Out of scope.** What not to change, including nearby refactors.
 
 State facts, and mark anything unverified as unverified.
+
+### Architecture decision records
+
+Leave this out if no repository in scope uses ADRs.
+
+- **ADRs that apply.** List the accepted ADRs the change touches, with path
+  and title, and how the plan follows each.
+- **New ADRs.** If the change makes a decision of the kind the repository
+  records, propose an ADR: for example a new dependency or service, a new
+  pattern, a contract between services, how data is stored, or a
+  cross-cutting concern. Give the repository, the next number, a title, and
+  the context, decision, and consequences in a few lines. Use the
+  repository's template, naming, and initial status, usually `Proposed`.
+  Accepting it is the team's decision, in review.
+- **Changes to existing ADRs.** If the change reverses or narrows an
+  accepted ADR, propose a new ADR that supersedes it, and the status change
+  on the old one. Do not rewrite the substance of an accepted ADR unless the
+  repository's convention says to.
+- Whether a decision is worth an ADR is a reversible question: decide it,
+  and list it as a provisional decision.
+- ADR work goes in a phase, with a `Status:` like any other, in the
+  repository whose decision it records, so it is reviewed and shipped with
+  the change.
 
 ### Coverage and done
 
@@ -205,9 +237,10 @@ The first line is exactly one of:
 
 Then, omitting sections that do not apply: context and goal; repositories,
 with path and branch, noting any that joined mid-plan or need no changes;
-current behaviour; repository constraints; decisions; provisional decisions;
-open questions; phases; patterns to follow; traps; out of scope; acceptance
-criteria coverage; verification; git workflow; definition of done.
+current behaviour; repository constraints; architecture decision records;
+decisions; provisional decisions; open questions; phases; patterns to follow;
+traps; out of scope; acceptance criteria coverage; verification; git
+workflow; definition of done.
 
 An implementer opening the file should learn what the change is, which
 repositories it touches, and where to start reading before reaching any
@@ -237,7 +270,7 @@ comment per question, and never post during the interview.
 The comment contains:
 
 1. A short paragraph: what is being planned, and in which repositories.
-2. Decisions made, each with its reasoning.
+2. Decisions made, each with its reasoning, and any ADRs proposed.
 3. Provisional decisions, each with the cost of changing it.
 4. Open questions, numbered. For each: the context needed to answer it, the
    options considered, and what each outcome would change. Write them so

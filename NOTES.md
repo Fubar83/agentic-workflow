@@ -56,6 +56,9 @@ The core of the talk. Give it time.
   ownership, security) come to me.
 - The plan is written so a fresh session can implement from it: side effects
   per phase, current behaviour, patterns to follow, traps, out of scope.
+- Where a repository has ADRs, the plan follows the accepted ones, treats
+  going against one as a blocking question, and proposes a new or
+  superseding ADR when the change makes a decision worth recording.
 
 ## 5. Outstanding questions stop the run
 
@@ -76,6 +79,10 @@ The core of the talk. Give it time.
 - `/jira-review` checks the change against the plan: every phase done or
   dropped with a reason, every acceptance criterion covered by a check that
   ran, nothing in the diff that the plan did not call for.
+- `/jira-review` also suggests changes to `AGENTS.md` and the other
+  instruction files, from what the run learned: a command that turned out to
+  be different, a convention found by trial. I decide which to take, and
+  accepted ones get their own commit.
 - `/jira-ship` commits per repository with the Jira key, opens pull requests
   in merge order, cross-links them, and comments on the story with the links.
   Pull request titles end with the key, for example `(#VFS-1234)`.

@@ -74,6 +74,12 @@ the folder.
 - When a phase is complete and its checks pass, set its status to `done`. If
   it turns out to be unnecessary, set `dropped: <reason>`. An interrupted run
   must be resumable from the plan alone.
+- Keep a `Lessons` section at the end of the plan. When something costs a
+  retry that a repository's instruction files would have prevented, add one
+  line: what happened, and which file would have helped. For example, a
+  build or test command that turned out to be different, a convention found
+  by trial, or an undocumented trap. Include what workers report of the
+  same kind. `jira-review` turns these into suggestions.
 
 ## Orchestrate
 
@@ -151,6 +157,10 @@ backend, say so in the plan and in your report. Do not claim it works.
   in every commit message. Never commit on `main`.
 - Before shipping, run `jira-review` to check the change against the plan.
   Fix what it finds, or record why not.
+- `jira-review` may also suggest changes to instruction files. Apply only
+  the ones the user accepts. Add each to the plan as its own phase, in the
+  repository it belongs to, so it gets its own commit and `jira-ship`
+  accounts for it.
 - Pushing and opening pull requests are the user's decision. When the user
   asks to ship, run `jira-ship` and stop where it stops.
 - Never push, open a pull request, or write to Jira except through the skills
