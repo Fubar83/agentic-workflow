@@ -130,21 +130,76 @@
     </header>
     <ul class="bullets" data-anim>
       <li>
-        <span class="icon">⌕</span>
-        <div><h3>Is the code right?</h3><p><code>/code-review</code>, my own skill. Against main.</p></div>
-      </li>
-      <li>
         <span class="icon">≡</span>
         <div><h3>Is it what we agreed?</h3><p><code>/jira-review</code>. Against the plan: every phase landed, nothing extra.</p></div>
       </li>
       <li>
+        <span class="icon">⌕</span>
+        <div><h3>Is the code right?</h3><p><code>/code-review</code>, my own skill. Side effects and regressions, against main.</p></div>
+      </li>
+      <li>
         <span class="icon">↗</span>
-        <div><h3>Then ship it</h3><p><code>/jira-ship</code>. Commits, PRs in merge order, a link on the ticket.</p></div>
+        <div><h3>Then ship it</h3><p><code>/jira-ship</code>. A commit per phase, pull requests in merge order.</p></div>
       </li>
     </ul>
   </section>
 
-  <!-- 7 — Chapter 02 -->
+  <!-- 7: the loop as a flowchart. js/flow.js draws the Mermaid source
+       below; the fallback line stays if Mermaid cannot load -->
+  <section class="slide slide--split">
+    <div class="split__text">
+      <header class="slide__head">
+        <span class="eyebrow">01 · The loop</span>
+        <h2>From story to pull requests</h2>
+      </header>
+      <div data-anim>
+        <ul class="ticks">
+          <li>Thick line: the run when all goes well</li>
+          <li>Side loops: deferred questions, <code>Diverges</code></li>
+          <li>Dotted: a small change skips <code>/code-review</code></li>
+          <li>Gold: where I decide</li>
+        </ul>
+      </div>
+    </div>
+    <figure class="flowchart">
+      <p class="flowchart__fallback">Story → /jira-plan → plan review → implement → /jira-review → /code-review → /jira-ship → pull requests</p>
+      <script type="text/x-mermaid">
+flowchart TB
+  accTitle: From story to pull requests
+  accDescr: The story goes to /jira-plan, and deferred questions go back to it. After the plan review, Sol and Luna implement. /jira-review sends a diverging change back to implementation and a conforming one on to /code-review, or on a small change straight to /jira-ship. After the fixes you pick, /jira-ship opens the pull requests, which you merge.
+
+  story["Jira story"]
+  plan["/jira-plan"]:::skill
+  team["Team answers<br>on the story"]
+  review["Plan review"]:::you
+  build["Sol + Luna implement"]
+  jr["/jira-review"]:::skill
+  fix["Sol fixes"]
+  cr["/code-review"]:::skill
+  ship["/jira-ship"]:::skill
+  prs["Pull requests<br>you merge"]:::you
+
+  %% the run when all goes well: thick, straight down. The longer links
+  %% (===>) leave a row free for the loop beside them
+  story ==> plan
+  plan ===> review
+  review ==> build
+  build ==> jr
+  jr ===>|Conforms| cr
+  cr ==>|fixes you pick| ship
+  ship ==> prs
+
+  %% the loops off to the side, and the shortcut for a small change
+  plan -->|questions deferred| team
+  team --> plan
+  jr -->|Diverges| fix
+  fix --> jr
+  jr -.->|small change| ship
+      </script>
+    </figure>
+  </section>
+
+  <!-- 8 — Chapter 02 -->
   <section class="slide slide--section" data-anim>
     <span class="ghost" aria-hidden="true">02</span>
     <span class="rule"></span>
@@ -152,7 +207,7 @@
     <h2 class="display">What makes it work</h2>
   </section>
 
-  <!-- 8 — The feature folder -->
+  <!-- 9 — The feature folder -->
   <section class="slide slide--split">
     <div class="split__text">
       <header class="slide__head">
@@ -181,7 +236,7 @@
     </aside>
   </section>
 
-  <!-- 9 — The plan file, mirrored so it does not repeat slide 8 -->
+  <!-- 10 — The plan file, mirrored so it does not repeat slide 9 -->
   <section class="slide slide--split">
     <aside class="split__visual">
       <div class="card">
@@ -213,7 +268,7 @@
     </div>
   </section>
 
-  <!-- 10 — The agents and how they split work -->
+  <!-- 11 — The agents and how they split work -->
   <section class="slide slide--split">
     <div class="split__text">
       <header class="slide__head">
@@ -243,7 +298,7 @@
     </aside>
   </section>
 
-  <!-- 11 — Chapter 03 -->
+  <!-- 12 — Chapter 03 -->
   <section class="slide slide--section" data-anim>
     <span class="ghost" aria-hidden="true">03</span>
     <span class="rule"></span>
@@ -251,7 +306,7 @@
     <h2 class="display">Where it runs</h2>
   </section>
 
-  <!-- 12 — The container sets the limits -->
+  <!-- 13 — The container sets the limits -->
   <section class="slide slide--split">
     <div class="split__text">
       <header class="slide__head">
@@ -280,7 +335,7 @@
     </aside>
   </section>
 
-  <!-- 13 — Chapter 04 · Demo -->
+  <!-- 14 — Chapter 04 · Demo -->
   <section class="slide slide--section" data-anim>
     <span class="ghost" aria-hidden="true">04</span>
     <span class="rule"></span>
@@ -293,7 +348,7 @@
     </ul>
   </section>
 
-  <!-- 14 — What I like -->
+  <!-- 15 — What I like -->
   <section class="slide">
     <header class="slide__head">
       <span class="eyebrow">In closing</span>
@@ -315,7 +370,7 @@
     </div>
   </section>
 
-  <!-- 15 — Closing -->
+  <!-- 16 — Closing -->
   <section class="slide slide--title slide--split">
     <div class="split__text" data-anim>
       <span class="rule"></span>
@@ -344,7 +399,7 @@
   <span class="chrome__brand">My agentic workflow</span>
   <nav class="chrome__nav" aria-label="Slide navigation">
     <button class="btn" id="prev" aria-label="Previous slide">←</button>
-    <span class="counter"><span id="current">1</span><span class="counter__sep">/</span><span id="total">15</span></span>
+    <span class="counter"><span id="current">1</span><span class="counter__sep">/</span><span id="total">16</span></span>
     <button class="btn" id="next" aria-label="Next slide">→</button>
   </nav>
 </footer>
@@ -368,5 +423,6 @@
 
 <script src="js/deck.js"></script>
 <script src="js/pong.js"></script>
+<script src="js/flow.js"></script>
 </body>
 </html>

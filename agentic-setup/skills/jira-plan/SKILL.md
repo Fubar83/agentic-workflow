@@ -144,9 +144,9 @@ If you cannot tell which it is, treat it as blocking.
 5. Do not assume an answer to a blocking question.
 
 Only a deferred blocking question stops the run. Provisional decisions are
-listed in the plan and on the story, so the team can object without being
-asked to decide: in this skill's comment if anything is deferred, otherwise
-in the one `jira-ship` posts.
+listed in the plan, and `jira-ship` adds them to the pull request
+descriptions, so the team can object without being asked to decide. If
+anything is deferred, this skill's comment lists them too.
 
 ## Build the plan
 
@@ -265,8 +265,8 @@ phase detail.
 - State the landing order as a list of repositories, with which PR depends on
   which.
 - Close with the next steps: review this plan and tell Sol to implement it;
-  then, as the user types them, `/code-review` for correctness,
-  `/jira-review` for conformance to this plan, and `/jira-ship`.
+  then, as the user types them, `/jira-review` for conformance to this
+  plan, `/code-review` for correctness, and `/jira-ship`.
 
 ## Close the run
 

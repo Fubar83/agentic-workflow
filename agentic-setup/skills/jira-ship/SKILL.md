@@ -1,18 +1,18 @@
 ---
 name: jira-ship
-description: 'Turn an implemented, reviewed plan into commits, pull requests, and a Jira update. Commits per phase, pushes each repository, opens pull requests in landing order with cross-links, and posts one comment on the story. Refuses to run on a plan that is blocked, unfinished, or unverified.'
+description: 'Turn an implemented, reviewed plan into commits and pull requests. Commits per phase, pushes each repository, and opens pull requests in landing order with cross-links. Writes nothing to Jira. Refuses to run on a plan that is blocked, unfinished, or unverified.'
 argument-hint: 'Jira key, or nothing to use the plan in this feature folder'
 ---
 
 # Ship the planned change
 
-Land work that is implemented and reviewed: commits per phase, pull requests
-in merge order, and one comment on the story. Implement nothing here. If the
-work is not finished, stop and say so.
+Land work that is implemented and reviewed: commits per phase and pull
+requests in merge order. Implement nothing here. If the work is not
+finished, stop and say so.
 
 Invoking this skill authorises committing, pushing, and opening pull
-requests. It does not authorise merging, deleting branches, or changing the
-Jira story's status.
+requests. It does not authorise merging or deleting branches. It writes
+nothing to Jira: no comment, and no change to the story's status or fields.
 
 ## Scope
 
@@ -72,10 +72,11 @@ hand, stay as they are. Per repository with uncommitted changes:
 1. Push the feature branch per repository, setting upstream on first push.
    Never force-push. If the remote branch has diverged, stop and report.
 2. Open one pull request per repository that has commits, using the plan's
-   title and description. If the branch already has an open pull request
-   from an earlier run, push to it and update its description instead of
-   opening another. Do not push or open anything for a repository with
-   nothing to ship.
+   title and description. Add the plan's decisions and provisional
+   decisions that concern the repository, so reviewers can object to them.
+   If the branch already has an open pull request from an earlier run, push
+   to it and update its description instead of opening another. Do not push
+   or open anything for a repository with nothing to ship.
 3. End every title with the Jira key in parentheses:
    `Add retry to orders (#VFS-1234)`. This applies to drafts too.
 4. Use `gh` where the remote is GitHub, otherwise the host's own tooling. If
@@ -88,25 +89,6 @@ hand, stay as they are. Per repository with uncommitted changes:
 7. Add reviewers, labels, or milestones only where repository convention
    requires them.
 8. Do not merge or enable auto-merge.
-
-## Update Jira
-
-Post one comment on the story with `twg`:
-
-1. What shipped, in a short paragraph.
-2. The pull requests in landing order, each with repository and link; drafts
-   marked as drafts, with what they wait on.
-3. The decisions and provisional decisions in the plan that no earlier
-   comment on the story lists.
-4. The verification run and its result, and any checks left to the user.
-5. Anything left undone and why: dropped phases, follow-up work, known gaps.
-6. The plan file path and the feature branch.
-
-If an earlier run already posted these pull requests, comment again only if
-one was added, and say what changed.
-
-Show the comment body, then post it. Do not change the story's status,
-fields, or assignee unless the user asked in this session.
 
 ## Record and report
 

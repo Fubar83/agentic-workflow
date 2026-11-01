@@ -9,8 +9,8 @@ argument-hint: 'Pull request, branch, commit, path, or base to compare with; not
 Review the change for plausible failures in existing behaviour, consumers,
 data, operations, or deployment. This review asks whether the code is
 correct; `jira-review` asks whether the change is what the plan agreed. In a
-feature folder, run it after implementation, before `/jira-review` and
-`/jira-ship`.
+feature folder, run it after `/jira-review`, once the change is known to
+match the plan, and before `/jira-ship`.
 
 The review is read-only. Do not edit, stage, or commit, and do not comment on
 pull requests unless the user asks. It neither reads nor writes Jira. Report
@@ -129,7 +129,7 @@ brief summary.
 
 The user decides which findings to fix. In a feature folder, close with the
 next steps: tell Sol which findings to fix, by number, then run
-`/jira-review`.
+`/jira-ship`, which reviews the fixes against the plan before it commits.
 
 ## Output
 

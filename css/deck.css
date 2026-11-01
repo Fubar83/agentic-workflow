@@ -689,6 +689,44 @@ code {
 .code .k { color: var(--accent); }
 .code .s { color: var(--accent-2); }
 
+/* ---------- flowchart: Mermaid, drawn by js/flow.js ------------------ */
+
+.flowchart { margin: 0; }
+.flowchart__fallback {
+  font-family: var(--mono);
+  font-size: 1rem;
+  color: var(--fg-dim);
+}
+.flowchart.is-drawn .flowchart__fallback { display: none; }
+.flowchart svg {
+  display: block;
+  width: 100%;
+  max-width: none !important;   /* Mermaid caps it at its drawn size */
+  height: auto;
+  max-height: calc(100vh - 16rem);   /* the height between the margins */
+}
+
+/* Mermaid writes its own colours; these use the tokens instead, so the
+   chart switches with the theme */
+.flowchart .node rect {
+  fill: var(--bg) !important;
+  stroke: var(--hairline) !important;
+  stroke-width: 1px !important;
+}
+.flowchart .node.you rect { fill: var(--gold-dim) !important; stroke: var(--accent) !important; }
+.flowchart .nodeLabel { color: var(--fg) !important; }
+.flowchart .node.skill .nodeLabel { color: var(--accent) !important; }
+.flowchart .flowchart-link { stroke: var(--fg-dim) !important; stroke-width: 1px !important; }
+/* the main path (==>) carries the eye; the ways back stay thin */
+.flowchart .edge-thickness-thick { stroke: var(--fg) !important; stroke-width: 2px !important; }
+.flowchart marker path { fill: var(--fg-dim) !important; stroke: var(--fg-dim) !important; }
+.flowchart .edgeLabel,
+.flowchart .edgeLabel p,
+.flowchart .labelBkg { background: var(--bg) !important; color: var(--fg-dim) !important; }
+.flowchart .edgeLabel rect { fill: var(--bg) !important; }
+.flowchart .cluster rect { fill: transparent !important; stroke: var(--line) !important; }
+.flowchart .cluster-label .nodeLabel { color: var(--accent) !important; }
+
 /* ---------- quote ----------------------------------------------------- */
 
 .slide--quote { justify-content: center; gap: 1.8rem; }

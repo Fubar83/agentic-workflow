@@ -5,14 +5,17 @@ describes.
 
 ```
 index.html      the slides, one <section class="slide"> each
-NOTES.md        speaker notes, one section per slide
+NOTES.md        speaker notes, one section per slide, then an appendix
 css/deck.css    theme and components
 js/deck.js      navigation
 js/pong.js      FSP playing pong on the closing slide
+js/flow.js      draws the Mermaid flowchart on slide 7
 agentic-setup/  the skills and agents the talk describes (see its README)
 ```
 
-No build step and no dependencies beyond two Google Fonts.
+No build step. Two Google Fonts and Mermaid, which draws the flowchart on
+slide 7, load from CDNs. Offline, the fonts fall back and slide 7 shows the
+loop as one line of text.
 
 ## Presenting
 
@@ -58,6 +61,11 @@ slide opens.
 
 Keep slide text short. Detail belongs in `NOTES.md`.
 
+The flowchart on slide 7 is Mermaid. Its source is the
+`<script type="text/x-mermaid">` on that slide in `index.html`, and
+[mermaid.live](https://mermaid.live) previews it. Its colours come from
+`css/deck.css`, so it follows the theme.
+
 ## Components
 
 | Class | Use |
@@ -74,6 +82,7 @@ Keep slide text short. Detail belongs in `NOTES.md`.
 | `.badge` | Small inline label |
 | `.cursor` | Blinking block cursor after the element |
 | `.pong` | Canvas for the pong game on the closing slide, drawn by `js/pong.js` |
+| `.flowchart` | Mermaid flowchart with a one-line fallback, drawn by `js/flow.js` |
 
 `css/deck.css` also contains `.agenda`, `.stack`, `.flow`, `.stats`, and
 `slide--quote`, which the current deck does not use.

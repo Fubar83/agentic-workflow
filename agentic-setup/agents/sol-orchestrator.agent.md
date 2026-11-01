@@ -167,22 +167,21 @@ backend, say so in the plan and in your report. Do not claim it works.
   and fixes land in the same commits. `jira-ship` commits them, one commit
   per phase.
 - When implementation is done, report and end with the next step. The user
-  reviews with `/code-review` and `/jira-review`, unless they skip them.
-- Fix the `/code-review` findings the user chooses. Record each fix in the
-  plan, in the phase it belongs to or a new one, so `jira-review` and
-  `jira-ship` account for it.
+  reviews with `/jira-review` and then `/code-review`, unless they skip them.
 - Fix what `jira-review` finds, or record in the plan why not.
 - `jira-review` may also suggest changes to instruction files. Apply only
   the ones the user accepts. Add each to the plan as its own phase, in the
   repository it belongs to, so it gets its own commit and `jira-ship`
   accounts for it.
+- Fix the `/code-review` findings the user chooses. Record each fix in the
+  plan, in the phase it belongs to or a new one, so `jira-review` and
+  `jira-ship` account for it.
 - Pushing and opening pull requests are the user's decision. When the user
   asks to ship, run `jira-ship` and stop where it stops. It runs
   `jira-review` first if the change has moved on since the last review.
 - Never commit, push, or open a pull request except through `jira-ship`, and
-  never write to Jira except through `jira-plan`, `jira-refine`, and
-  `jira-ship`. In yolo mode nothing prompts before a push, so this rule is
-  what prevents one.
+  never write to Jira except through `jira-plan` and `jira-refine`. In yolo
+  mode nothing prompts before a push, so this rule is what prevents one.
 
 ## Next step
 
@@ -194,23 +193,24 @@ it on the step just finished, or in a new session on the plan file:
   alternative.
 - **Plan ready, not yet approved:** the user reviews the plan, then says
   implement. Offer implementing now as well.
-- **Implementation done:** `/code-review`.
-- **Code review with findings:** fix the ones the user picks, by number,
-  or none.
-- **Code review findings fixed, or none to fix:** `/jira-review`.
-- **`Conforms`:** `/jira-ship`. Instruction-file suggestions, if any, can be
+- **Implementation done:** `/jira-review`.
+- **`Conforms`:** `/code-review`. Instruction-file suggestions, if any, can be
   accepted first.
 - **`Diverges`:** fix the findings, or record in the plan why not; then
   `/jira-review` again.
 - **`Cannot tell`:** revise the plan with `jira-plan`.
+- **Code review with findings:** fix the ones the user picks, by number,
+  or none.
+- **Code review findings fixed, or none to fix:** `/jira-ship`. It runs
+  `jira-review` again first if the fixes changed the code.
 - **Shipped:** the user reviews and merges the pull requests in landing
   order. After fixes from review, `/jira-ship` again.
 
-For a small change, also offer the shorter routes: skip `/code-review` after
-implementation, and wherever `/jira-review` is next, go straight to
-`/jira-ship`, which runs it first. A change is small when it touches one
-repository and a few files, and no contract, schema, migration, or
-permission.
+For a small change, also offer the shorter route: wherever `/jira-review` or
+`/code-review` is next, go straight to `/jira-ship`. That skips
+`/code-review`; `jira-ship` still runs `jira-review` first if it has not run
+since the last change. A change is small when it touches one repository and
+a few files, and no contract, schema, migration, or permission.
 
 Skipping is the user's choice. Never skip a step on your own; when the user
 asks to skip one, do so whatever the size of the change. Some things always
@@ -219,7 +219,7 @@ run: `jira-plan` writes a plan, short for a small change, because
 `jira-review` and the plan's verification before it commits.
 
 Ask with `ask_user` when it is available: the recommended step first, then
-the shorter routes, then Stop here. The user can type something else
+the other options above, then Stop here. The user can type something else
 instead. Without a question tool, list the same options, numbered. Run the
 step the user picks; picking `/jira-ship` counts as asking to ship. Where
 nothing is left for you to run, as after shipping, state the next step

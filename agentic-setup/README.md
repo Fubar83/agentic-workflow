@@ -7,18 +7,20 @@ requests across several repositories, working in one feature folder.
 
 | Path | Purpose |
 | --- | --- |
+| `AGENTS-AND-SKILLS.md` | What each agent and skill does, how, and why. |
 | `agents/sol-orchestrator.agent.md` | Main agent. Plans, delegates, integrates, verifies. |
 | `agents/luna-worker.agent.md` | Worker agent. Bounded tasks in one repository. Started only by Sol. |
 | `skills/jira-plan/` | Builds the implementation plan from the story. |
-| `skills/code-review/` | Reviews the change in every repository against its base branch. |
 | `skills/jira-review/` | Checks the implemented change against the plan. |
-| `skills/jira-ship/` | Commits, pushes, opens pull requests, updates the story. |
+| `skills/code-review/` | Reviews the change in every repository against its base branch. |
+| `skills/jira-ship/` | Commits, pushes, and opens pull requests. Writes nothing to Jira. |
 | `skills/jira-refine/` | Prepares stories for a refinement session. Separate from the loop. |
 | `wag/feature-manifest.sh` | Writes `FEATURE.md` when a feature folder is created. |
 
-The two reviews split the work. `/code-review` checks the change for
-regressions against each repository's base branch, committed or not, and
-does not read Jira. `/jira-review` checks it against the plan.
+The two reviews split the work. `/jira-review` comes first and checks the
+change against the plan. `/code-review` then checks it for regressions and
+side effects against each repository's base branch, committed or not, and
+reads neither Jira nor the plan.
 
 ## Install
 
@@ -61,9 +63,9 @@ cpyolo           Sol starts in the feature folder
 /jira-plan       one plan across all repositories, after an interview; then stops
 plan review      you read .working-docs/<jira-key>.md, then tell Sol to implement
 implement        Sol, with Luna workers per repository; nothing is committed yet
-/code-review     correctness, every repository against its base branch
 /jira-review     conformance to the plan; suggestions for instruction files
-/jira-ship       a commit per phase, pull requests in landing order, Jira comment
+/code-review     correctness, every repository against its base branch
+/jira-ship       a commit per phase, pull requests in landing order
 ```
 
 The changes stay uncommitted until `/jira-ship`, so both reviews look at
@@ -88,9 +90,11 @@ schema, migration, or permission. For one, you can skip:
 
 - **The plan review.** Pick Implement as soon as the plan is ready, or ask
   up front: "plan and implement VFS-1234". A blocked plan still stops.
-- **`/code-review`.** Sol offers to skip it after implementation.
-- **The separate `/jira-review`.** Sol offers `/jira-ship` instead, which
-  runs `jira-review` first.
+- **`/code-review`.** After a `Conforms` verdict, Sol offers `/jira-ship`
+  instead.
+- **The separate `/jira-review`.** After implementation, Sol offers
+  `/jira-ship` as well. It runs `jira-review` first and skips
+  `/code-review`.
 
 Sol never skips a step on its own. On a larger change it does not offer
 the shorter routes, but takes one when you ask. Some things always run:
@@ -110,9 +114,9 @@ plan's verification before it commits.
 | Implementation and Luna workers | Sol, when you say to implement |
 | Phase status in the plan | Sol |
 | Offering the next step | Sol, at the end of each step |
-| `/code-review` | You |
 | `jira-review` | You (`/jira-review`), or `jira-ship` if it has not run since the last change |
 | Accepting instruction-file suggestions | You |
+| `/code-review` | You |
 | `jira-ship`: commits, push, pull requests | You (`/jira-ship`, or ask Sol to ship) |
 | `jira-refine` | You (`/jira-refine`) |
 
@@ -193,8 +197,9 @@ If these change, update the Environment sections in both agent files.
   prompts. Sol and Luna are told never to push outside `jira-ship`. To
   enforce it instead, add a deny rule for `git push` to the start command and
   push by hand; deny rules apply even with `--yolo`.
-- **Jira comments are posted without confirmation.** `jira-plan`,
-  `jira-refine`, and `jira-ship` show the comment and then post it.
+- **Jira comments are posted without confirmation.** `jira-plan` and
+  `jira-refine` show the comment and then post it. `jira-ship` writes
+  nothing to Jira.
 - **Pull requests need `gh` and a GitHub remote.** On other hosts,
   `jira-ship` prints the title and description instead.
 - **`--yolo` can be switched off by policy.** When
@@ -251,19 +256,21 @@ Nothing has been run end to end yet. Check, in order:
     whether they run at the same time, and that no worker starts its own.
     Each worker's report lists the instruction files it read. When Sol
     reports done, nothing is committed.
-11. Sol then offers the next step as a choice, `/code-review` first. On a
-    small story, skipping it is among the choices. On another small story,
-    "plan and implement <KEY>" goes from the plan to implementation without
-    stopping, unless a question is deferred.
+11. Sol then offers the next step as a choice: `/jira-review` first, and
+    `/code-review` after `Conforms`. On a small story, `/jira-ship` is among
+    the choices at both points. On another small story, "plan and implement
+    <KEY>" goes from the plan to implementation without stopping, unless a
+    question is deferred.
 12. `/code-review`, run from the feature folder, lists every worktree in its
     coverage, with the base it compared with and its new files. New files
     stay untracked until `/jira-ship`, and `git diff` does not show them, so
     check that one the change added was reviewed.
-13. Run `/jira-ship` on a story where opening pull requests is fine. Expect
-    `/jira-review` to run first, one commit per phase, titles ending in
-    `(#KEY)`, and dependent pull requests opened as drafts. Run it again
-    after a small change: it should push to the open pull requests, not
-    open new ones.
+13. Run `/jira-ship` on a story where opening pull requests is fine, after
+    fixing a `/code-review` finding. Expect `/jira-review` to run again
+    first, one commit per phase, titles ending in `(#KEY)`, the plan's
+    decisions in each description, dependent pull requests opened as
+    drafts, and no comment on the story. Run it again after a small change:
+    it should push to the open pull requests, not open new ones.
 
 ## Conventions
 

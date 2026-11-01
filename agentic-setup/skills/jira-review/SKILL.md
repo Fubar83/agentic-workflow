@@ -8,8 +8,9 @@ argument-hint: 'Jira key, or nothing to use the plan in this feature folder'
 
 A code review asks whether the code is correct. This review asks whether the
 change is what the plan agreed, and whether the plan still describes it. Run
-it after implementation and `/code-review`, before `/jira-ship`. `jira-ship`
-also runs it when it has not run since the last change.
+it first after implementation, before `/code-review` and `/jira-ship`.
+`jira-ship` also runs it when it has not run since the last change, such as
+after fixes from `/code-review`.
 
 The review is read-only. Do not fix, edit, or commit. Report findings and let
 the user decide.
@@ -104,7 +105,7 @@ No icons, emoji, decorative separators, or checkbox glyphs. Do not restate
 the plan. Report only where the change and the plan differ, where you could
 not tell, and the suggestions.
 
-Close with the next step: `/jira-ship` on `Conforms`; on `Diverges`, fix the
-findings or record in the plan why not, then review again; on
+Close with the next step: `/code-review` on `Conforms`; on `Diverges`, fix
+the findings or record in the plan why not, then review again; on
 `Cannot tell`, revise the plan with `jira-plan`. Leave it out when
 `jira-ship` runs this review.
