@@ -117,6 +117,10 @@ verification run, anything skipped, and anything needing their action. Do not
 claim a check passed unless you ran it, or that a pull request exists unless
 the host returned it.
 
+Close with the next step: the user reviews and merges the pull requests in
+landing order, and after fixes from review, runs `/jira-ship` again to push
+them.
+
 ## Output
 
 No icons, emoji, decorative separators, or checkbox glyphs. When blocked,

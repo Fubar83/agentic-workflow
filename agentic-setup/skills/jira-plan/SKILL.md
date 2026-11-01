@@ -288,8 +288,8 @@ Show the comment body, then post it. Report the plan path, the branch, and
 the open questions, and stop. Do not implement or commit.
 
 **If nothing is outstanding,** report that the plan is ready for review, with
-its path, the repositories, and the branch, and stop. The user starts
-implementation after reviewing the plan.
+its path, the repositories, and the branch, and stop. Implementation starts
+when the user says so, usually after reviewing the plan.
 
 ## Output
 

@@ -103,3 +103,8 @@ so they are committed separately and `jira-ship` accounts for them.
 No icons, emoji, decorative separators, or checkbox glyphs. Do not restate
 the plan. Report only where the change and the plan differ, where you could
 not tell, and the suggestions.
+
+Close with the next step: `/jira-ship` on `Conforms`; on `Diverges`, fix the
+findings or record in the plan why not, then review again; on
+`Cannot tell`, revise the plan with `jira-plan`. Leave it out when
+`jira-ship` runs this review.

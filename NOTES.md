@@ -38,6 +38,10 @@ Points to make:
 
 - The plan review (step 4) is where I spend my attention.
 - Shipping is one step: commits, pull requests, and the ticket comment.
+- After each step, Sol offers the next one as a choice. For a small change
+  it also offers to skip: implement without the plan review, skip
+  `/code-review`, or go straight to `/jira-ship`, which runs `/jira-review`
+  itself. The plan and the checks inside `/jira-ship` always run.
 
 ## 4. The plan step closes the gaps
 
@@ -78,9 +82,9 @@ The core of the talk. Give it time.
 
 - Nothing is committed before shipping, so both reviews look at local
   changes, and fixes end up in the same commits.
-- `/code-review` checks correctness: it compares the change with main,
-  committed or not, and does not read Jira. It is my own skill, separate
-  from this set, and I run it myself.
+- `/code-review` checks correctness: it compares the change in every
+  repository with main, committed or not, new files included, and does not
+  read Jira. It is my own skill, and I run it myself.
 - `/jira-review` checks the change against the plan: every phase done or
   dropped with a reason, every acceptance criterion covered by a check that
   ran, nothing in the diff that the plan did not call for. It uses the plan
@@ -224,9 +228,9 @@ shows a still frame when the system asks for reduced motion.
 
 Likely questions, with factual answers:
 
-- **Can I use this?** The skills and agents are Markdown files. The folder
-  pattern works with plain `git worktree`; `wag` is optional. `/code-review`
-  is a separate skill of mine and not part of the set.
+- **Can I use this?** The skills, `/code-review` included, and the agents
+  are Markdown files. The folder pattern works with plain `git worktree`;
+  `wag` is optional.
 - **What about secrets and data?** The container has no internet access
   beyond approved domains and no cloud credentials. It can reach GitHub;
   pushing outside `/jira-ship` is ruled out by instruction, not by the box.

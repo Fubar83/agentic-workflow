@@ -10,14 +10,15 @@ requests across several repositories, working in one feature folder.
 | `agents/sol-orchestrator.agent.md` | Main agent. Plans, delegates, integrates, verifies. |
 | `agents/luna-worker.agent.md` | Worker agent. Bounded tasks in one repository. Started only by Sol. |
 | `skills/jira-plan/` | Builds the implementation plan from the story. |
+| `skills/code-review/` | Reviews the change in every repository against its base branch. |
 | `skills/jira-review/` | Checks the implemented change against the plan. |
 | `skills/jira-ship/` | Commits, pushes, opens pull requests, updates the story. |
 | `skills/jira-refine/` | Prepares stories for a refinement session. Separate from the loop. |
 | `wag/feature-manifest.sh` | Writes `FEATURE.md` when a feature folder is created. |
 
-`/code-review`, used in the loop, is a separate skill of mine and is not
-included here. It compares the change with main, committed or not, and does
-not read Jira; `/jira-review` checks the change against the plan.
+The two reviews split the work. `/code-review` checks the change for
+regressions against each repository's base branch, committed or not, and
+does not read Jira. `/jira-review` checks it against the plan.
 
 ## Install
 
@@ -60,7 +61,7 @@ cpyolo           Sol starts in the feature folder
 /jira-plan       one plan across all repositories, after an interview; then stops
 plan review      you read .working-docs/<jira-key>.md, then tell Sol to implement
 implement        Sol, with Luna workers per repository; nothing is committed yet
-/code-review     correctness (separate skill)
+/code-review     correctness, every repository against its base branch
 /jira-review     conformance to the plan; suggestions for instruction files
 /jira-ship       a commit per phase, pull requests in landing order, Jira comment
 ```
@@ -75,6 +76,28 @@ agent's context, so Sol's rules still apply.
 `/jira-refine` is not part of this sequence. It is run on stories before a
 refinement session, usually without a feature folder.
 
+## Next step and skipping
+
+At the end of each step, Sol offers the next one. In Copilot's question
+prompt, the recommended step comes first, then any shorter routes, then
+Stop here. You can type something else instead. Picking `/jira-ship`
+counts as asking to ship.
+
+A small change touches one repository and a few files, and no contract,
+schema, migration, or permission. For one, you can skip:
+
+- **The plan review.** Pick Implement as soon as the plan is ready, or ask
+  up front: "plan and implement VFS-1234". A blocked plan still stops.
+- **`/code-review`.** Sol offers to skip it after implementation.
+- **The separate `/jira-review`.** Sol offers `/jira-ship` instead, which
+  runs `jira-review` first.
+
+Sol never skips a step on its own. On a larger change it does not offer
+the shorter routes, but takes one when you ask. Some things always run:
+`jira-plan` writes a plan, short for a small change, because `jira-review`
+and `jira-ship` work from it; and `jira-ship` runs `jira-review` and the
+plan's verification before it commits.
+
 ## What is automatic
 
 | Step | Started by |
@@ -86,6 +109,7 @@ refinement session, usually without a feature folder.
 | Approving the plan | You |
 | Implementation and Luna workers | Sol, when you say to implement |
 | Phase status in the plan | Sol |
+| Offering the next step | Sol, at the end of each step |
 | `/code-review` | You |
 | `jira-review` | You (`/jira-review`), or `jira-ship` if it has not run since the last change |
 | Accepting instruction-file suggestions | You |
@@ -200,8 +224,9 @@ Nothing has been run end to end yet. Check, in order:
 1. `wag <feature> <repos…>` writes `FEATURE.md` with the right key and
    repositories. The script has only been tested with wag's variables set by
    hand.
-2. `/skills list` shows `jira-plan`, `jira-review`, `jira-ship`, and
-   `jira-refine`.
+2. `/skills list` shows `jira-plan`, `code-review`, `jira-review`,
+   `jira-ship`, and `jira-refine`. If an older `code-review` is installed
+   outside `~/.copilot/skills/`, such as in `~/.agents/skills/`, remove it.
 3. `/agent` lists Sol Orchestrator once, and not Luna Worker. Delete any
    `Sol Orchestrator.agent.md` or `Luna Worker.agent.md` left in
    `~/.copilot/agents/` by an earlier install.
@@ -226,11 +251,15 @@ Nothing has been run end to end yet. Check, in order:
     whether they run at the same time, and that no worker starts its own.
     Each worker's report lists the instruction files it read. When Sol
     reports done, nothing is committed.
-11. `/code-review`, run from the feature folder, reviews every worktree,
-    since the folder itself is not a git repository. It also reviews new
-    files: they stay untracked until `/jira-ship`, and `git diff main` does
-    not show untracked files.
-12. Run `/jira-ship` on a story where opening pull requests is fine. Expect
+11. Sol then offers the next step as a choice, `/code-review` first. On a
+    small story, skipping it is among the choices. On another small story,
+    "plan and implement <KEY>" goes from the plan to implementation without
+    stopping, unless a question is deferred.
+12. `/code-review`, run from the feature folder, lists every worktree in its
+    coverage, with the base it compared with and its new files. New files
+    stay untracked until `/jira-ship`, and `git diff` does not show them, so
+    check that one the change added was reviewed.
+13. Run `/jira-ship` on a story where opening pull requests is fine. Expect
     `/jira-review` to run first, one commit per phase, titles ending in
     `(#KEY)`, and dependent pull requests opened as drafts. Run it again
     after a small change: it should push to the open pull requests, not
