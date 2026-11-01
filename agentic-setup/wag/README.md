@@ -31,7 +31,7 @@ start:
     - feature-manifest.sh
   sol:
     - feature-manifest.sh
-    - copilot --agent "Sol Orchestrator" --yolo
+    - copilot --agent sol-orchestrator --yolo
 autostart: [manifest]
 ```
 

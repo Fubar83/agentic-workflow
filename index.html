@@ -70,8 +70,9 @@
       </header>
       <div data-anim>
         <ul class="ticks">
-          <li>Options for every open question</li>
-          <li>Your own answer, or <strong>"Defer to the team"</strong></li>
+          <li>Only blocking questions are asked</li>
+          <li>Options, your own answer, or <strong>"Defer to the team"</strong></li>
+          <li>Reversible choices decided and listed</li>
           <li>Decisions and deferrals both recorded</li>
         </ul>
       </div>
@@ -130,11 +131,11 @@
     <ul class="bullets" data-anim>
       <li>
         <span class="icon">⌕</span>
-        <div><h3>Is the code right?</h3><p><code>/code-review</code>, my own skill.</p></div>
+        <div><h3>Is the code right?</h3><p><code>/code-review</code>, my own skill. Against main.</p></div>
       </li>
       <li>
         <span class="icon">≡</span>
-        <div><h3>Is it what we agreed?</h3><p><code>/jira-review</code>. Every phase landed, nothing extra.</p></div>
+        <div><h3>Is it what we agreed?</h3><p><code>/jira-review</code>. Against the plan: every phase landed, nothing extra.</p></div>
       </li>
       <li>
         <span class="icon">↗</span>
@@ -180,7 +181,39 @@
     </aside>
   </section>
 
-  <!-- 9 — The agents and how they split work -->
+  <!-- 9 — The plan file, mirrored so it does not repeat slide 8 -->
+  <section class="slide slide--split">
+    <aside class="split__visual">
+      <div class="card">
+        <div class="card__bar"><span></span><span></span><span></span></div>
+        <div class="card__body">
+          <span class="eyebrow">VFS-1234 · plan</span>
+          <p class="qa__q">Plan status: ready to implement</p>
+          <p class="task done">1 · marketconfiguration <span class="badge">done</span></p>
+          <p class="task active">2 · integration <span class="badge">pending</span></p>
+          <p class="task">3 · providerdata <span class="badge">dropped</span></p>
+          <p class="qa__q">Lessons</p>
+          <p class="task">README test command is out of date</p>
+        </div>
+      </div>
+    </aside>
+    <div class="split__text">
+      <header class="slide__head">
+        <span class="eyebrow">02 · What makes it work</span>
+        <h2>One plan, every step</h2>
+      </header>
+      <div data-anim>
+        <ul class="ticks">
+          <li><code>/jira-plan</code> writes it</li>
+          <li>Sol marks phases done or dropped</li>
+          <li><code>/jira-review</code> and <code>/jira-ship</code> read it</li>
+          <li>A fresh session can pick it up</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 — The agents and how they split work -->
   <section class="slide slide--split">
     <div class="split__text">
       <header class="slide__head">
@@ -204,13 +237,13 @@
           <p class="task">├─ luna · marketconfiguration</p>
           <p class="task">├─ luna · providerdata</p>
           <p class="task">└─ luna · integration</p>
-          <p class="task active">sol → integrate, verify, commit</p>
+          <p class="task active">sol → integrate and verify</p>
         </div>
       </div>
     </aside>
   </section>
 
-  <!-- 10 — Chapter 03 -->
+  <!-- 11 — Chapter 03 -->
   <section class="slide slide--section" data-anim>
     <span class="ghost" aria-hidden="true">03</span>
     <span class="rule"></span>
@@ -218,7 +251,7 @@
     <h2 class="display">Where it runs</h2>
   </section>
 
-  <!-- 11 — The sandbox is the boundary -->
+  <!-- 12 — The container sets the limits -->
   <section class="slide slide--split">
     <div class="split__text">
       <header class="slide__head">
@@ -240,15 +273,14 @@
         <div class="card__body">
           <p class="task done">read src/Orders/Handler.cs</p>
           <p class="task done">edit src/Orders/Handler.cs</p>
-          <p class="task done">run dotnet test</p>
-          <p class="task active">git commit</p>
+          <p class="task active">run dotnet test</p>
           <p class="task">git push <span class="badge">/jira-ship only</span></p>
         </div>
       </div>
     </aside>
   </section>
 
-  <!-- 12 — Chapter 04 · Demo -->
+  <!-- 13 — Chapter 04 · Demo -->
   <section class="slide slide--section" data-anim>
     <span class="ghost" aria-hidden="true">04</span>
     <span class="rule"></span>
@@ -261,7 +293,7 @@
     </ul>
   </section>
 
-  <!-- 13 — What I like -->
+  <!-- 14 — What I like -->
   <section class="slide">
     <header class="slide__head">
       <span class="eyebrow">In closing</span>
@@ -283,7 +315,7 @@
     </div>
   </section>
 
-  <!-- 14 — Closing -->
+  <!-- 15 — Closing -->
   <section class="slide slide--title slide--split">
     <div class="split__text" data-anim>
       <span class="rule"></span>
@@ -312,7 +344,7 @@
   <span class="chrome__brand">My agentic workflow</span>
   <nav class="chrome__nav" aria-label="Slide navigation">
     <button class="btn" id="prev" aria-label="Previous slide">←</button>
-    <span class="counter"><span id="current">1</span><span class="counter__sep">/</span><span id="total">14</span></span>
+    <span class="counter"><span id="current">1</span><span class="counter__sep">/</span><span id="total">15</span></span>
     <button class="btn" id="next" aria-label="Next slide">→</button>
   </nav>
 </footer>

@@ -24,8 +24,9 @@ there is no plan, say so and stop; do not substitute a general code review.
 Reads outside the folder follow the same rules as elsewhere: main checkouts
 only, never another feature folder or task worktree, and nothing is modified.
 
-Review the full diff of the feature branch against its base in each
-repository, not only recent commits.
+Review the whole change in each repository against its base: commits on the
+feature branch, uncommitted changes, and new untracked files. Before
+`jira-ship`, the work is usually all uncommitted.
 
 An empty diff is a finding only if the plan expected changes. Check the
 repository's phases:

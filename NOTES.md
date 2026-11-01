@@ -29,7 +29,7 @@ Read the steps in order. Do not explain them yet; this slide is the outline.
 2. The agent starts in that folder.
 3. A plan is built from the Jira story.
 4. I review the plan.
-5. The agent implements it.
+5. The agent implements it. Nothing is committed yet.
 6. Review: `/code-review` (my own skill), then `/jira-review` against the
    plan.
 7. Ship: `/jira-ship`.
@@ -46,14 +46,15 @@ The core of the talk. Give it time.
 - The skill reads the story through `twg`, Atlassian's Teamwork Graph CLI, and
   the code in every repository in the folder. It writes one plan covering all
   of them.
-- Before writing phases, it asks me questions. Each has the options it
-  suggests, with what each means, then a free-text option for my own
-  answer, then "Defer to the team". Choosing that stops the run.
-- A free-text answer is recorded as a decision like the others. If it is
-  unclear or conflicts with the code, the agent asks a follow-up.
 - It sorts questions first. Reversible ones (naming, structure) it decides
   itself and records as provisional. Only blocking ones (schemas, contracts,
   ownership, security) come to me.
+- It asks those before writing any phases: the whole list first, then one at
+  a time. Each comes with the options it suggests and what each means, and
+  "Defer to the team" last, which stops the run. I can also type my own
+  answer.
+- A free-text answer is recorded as a decision like the others. If it is
+  unclear or conflicts with the code, the agent asks a follow-up.
 - The plan is written so a fresh session can implement from it: side effects
   per phase, current behaviour, patterns to follow, traps, out of scope.
 - Where a repository has ADRs, the plan follows the accepted ones, treats
@@ -68,34 +69,42 @@ The core of the talk. Give it time.
   comment.
 - It then saves the plan, marked blocked, and stops. No implementation.
 - If nothing is deferred, the plan is marked ready and the run still stops,
-  for my review. Implementation starts when I say so.
+  for my review. I can ask for changes, and implementation starts when I say
+  so.
 - When the story has answers, the next run reads the saved plan, keeps its
   decisions, and asks only what is still open.
 
 ## 6. Two reviews, then ship
 
-- `/code-review` checks correctness. It is my own skill, separate from this
-  set, and I run it myself.
+- Nothing is committed before shipping, so both reviews look at local
+  changes, and fixes end up in the same commits.
+- `/code-review` checks correctness: it compares the change with main,
+  committed or not, and does not read Jira. It is my own skill, separate
+  from this set, and I run it myself.
 - `/jira-review` checks the change against the plan: every phase done or
   dropped with a reason, every acceptance criterion covered by a check that
-  ran, nothing in the diff that the plan did not call for.
+  ran, nothing in the diff that the plan did not call for. It uses the plan
+  rather than the story because the plan also holds the decisions from the
+  interview.
 - `/jira-review` also suggests changes to `AGENTS.md` and the other
   instruction files, from what the run learned: a command that turned out to
   be different, a convention found by trial. I decide which to take, and
   accepted ones get their own commit.
-- `/jira-ship` commits per repository with the Jira key, opens pull requests
-  in merge order, cross-links them, and comments on the story with the links.
-  Pull request titles end with the key, for example `(#VFS-1234)`.
+- `/jira-ship` makes one commit per phase with the Jira key, opens pull
+  requests in merge order, cross-links them, and comments on the story with
+  the links and the decisions made. Pull request titles end with the key,
+  for example `(#VFS-1234)`.
 - `/jira-ship` runs `/jira-review` first if it has not run since the last
   change. It stops if the plan is blocked, a phase is unfinished, a
   repository has changes the plan does not account for, or the review does
-  not conform.
+  not conform. Run again later, it pushes to the same pull requests.
 - Each skill can be typed, or Sol runs it when asked in plain words, such as
   "ship it".
 
 ## 7. Chapter two: what makes it work
 
-Transition. Two things: one folder per change, and the agents.
+Transition. Three things: one folder per change, one plan that every step
+works from, and the agents.
 
 ## 8. One folder, every repo
 
@@ -113,7 +122,24 @@ Transition. Two things: one folder per change, and the agents.
 - I use my own tool, `wag`, to create the folder. `git worktree add` does the
   same by hand.
 
-## 9. Sol delegates, then integrates
+## 9. One plan, every step
+
+- The plan is one Markdown file, `.working-docs/<jira-key>.md`, at the root
+  of the feature folder. That is outside every repository, so it is never
+  committed.
+- The first line says whether it is ready or blocked. Each phase has a
+  status: pending, done, or dropped with a reason. Sol updates them as work
+  lands, so an interrupted run can pick up from the file.
+- `/jira-review` checks the change against it. `/jira-ship` will not ship
+  while a phase is pending, commits phase by phase, and adds the pull request
+  links to it.
+- Sol also keeps a Lessons section in it: anything that cost a retry and
+  that a repository's instruction files would have prevented. That is where
+  `/jira-review`'s suggestions come from.
+- On screen, one repository turned out to need no change, so its phase is
+  dropped and it gets no pull request.
+
+## 10. Sol delegates, then integrates
 
 - `cpyolo` is my alias: it starts Copilot CLI with the Sol agent selected, in
   yolo mode.
@@ -121,20 +147,20 @@ Transition. Two things: one folder per change, and the agents.
   one repository's implementation slice, a verification run.
 - Workers in different repositories cannot conflict, so Sol starts them
   together. Work that shares files or depends on order runs in sequence.
-- `[Confirm in a test run that Copilot runs the workers concurrently; /tasks
-  lists them. If it does not, /fleet is Copilot's documented way to run
-  subagents in parallel.]`
+- `[Confirm in a test run that Sol starts the workers together; /tasks
+  lists them. Copilot CLI runs subagents concurrently, but starting several
+  at once is the model's choice; /fleet asks for it explicitly.]`
 - Workers return only their results, which keeps Sol's context focused on the
   plan.
 - Sol does not accept a worker's "done" as verification. It reruns the
   checks.
 
-## 10. Chapter three: where it runs
+## 11. Chapter three: where it runs
 
 Transition. The environment the agent runs in, which is what lets it work
 without asking me before every command.
 
-## 11. The container sets the limits
+## 12. The container sets the limits
 
 - The agent runs commands without asking me first. The container sets the
   limits, and my attention goes to the plan and the diff.
@@ -159,7 +185,7 @@ credentials. It could push a branch; its instructions forbid that outside
 `/jira-ship`. A deny rule for `git push` in the start command would enforce
 it, at the cost of pushing by hand.
 
-## 12. Demo
+## 13. Demo
 
 Before starting, say what to watch for:
 
@@ -171,9 +197,9 @@ Before starting, say what to watch for:
 whether you expect a deferred question.]`
 
 If the plan comes back with no open questions, say so; that is a valid
-outcome. If the demo runs long, skip slide 13.
+outcome. If the demo runs long, skip slide 14.
 
-## 13. What I like
+## 14. What I like
 
 - Setup: one folder and one command, with every repository in it.
 - Questions: answered before any code is written, or handed to the team with
@@ -189,7 +215,7 @@ Limits worth stating:
 - Backend changes are verified by me, in Rider.
 - Pushing and opening pull requests are always my decision.
 
-## 14. Questions
+## 15. Questions
 
 On screen: the letters of FSP play pong. Each side has three score slots,
 filled as that side scores, and the first to three wins. Then they line up

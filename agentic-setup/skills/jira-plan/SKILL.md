@@ -69,13 +69,15 @@ repositories you read and what you relied on from them.
 
 ## Resume an earlier plan
 
-If `.working-docs/<jira-key>.md` exists, an earlier run stopped on open
-questions.
+If `.working-docs/<jira-key>.md` exists, build on it. Carry forward every
+decision it records, and do not reopen one unless the user asks.
 
-1. Carry forward every decision it records.
-2. Re-read the story, including comments from earlier runs, for answers to
-   the questions it lists.
-3. Ask only what is still unanswered. Do not reopen recorded decisions.
+- **Blocked:** an earlier run stopped on open questions. Re-read the story,
+  including comments since that run, for answers. Ask only what is still
+  unanswered.
+- **Ready:** the user wants the plan revised. Apply what they ask,
+  investigating only what the change touches, and keep the rest, including
+  phase statuses and the `Lessons` section.
 
 ## Gather context
 
@@ -118,17 +120,20 @@ Ask only questions whose answers change the plan. Sort each one first:
 
 If you cannot tell which it is, treat it as blocking.
 
-1. Ask the blocking questions as one numbered batch. List each question's
-   options in this order:
+1. List the blocking questions together, numbered, so the user sees the
+   whole set. Then ask them one at a time, each with its options in this
+   order:
 
    1. The suggested options, each with what it means for the
       implementation.
    2. **Your own answer**, in free text.
    3. **Defer to the team**, always last. State that choosing it stops the
-      run until the team answers.
+      run, once the interview is over, until the team answers.
 
-   If you ask through a question tool such as `ask_user`, make sure the
-   user can type an answer, not only pick one.
+   With a question tool such as `ask_user`, the choices are the suggested
+   options followed by Defer to the team. The user types their own answer
+   in the tool's free-text input, so do not add a choice for it. If the tool
+   cannot take free text, ask in plain text instead.
 2. Treat a free-text answer as a decision like any other. If it is unclear,
    or conflicts with what the code shows, say so and ask a follow-up before
    recording it.
@@ -139,8 +144,9 @@ If you cannot tell which it is, treat it as blocking.
 5. Do not assume an answer to a blocking question.
 
 Only a deferred blocking question stops the run. Provisional decisions are
-listed in the plan and in the Jira comment, so the team can object without
-being asked to decide.
+listed in the plan and on the story, so the team can object without being
+asked to decide: in this skill's comment if anything is deferred, otherwise
+in the one `jira-ship` posts.
 
 ## Build the plan
 
@@ -249,7 +255,8 @@ phase detail.
 ### Git workflow section
 
 - Record the existing feature branch.
-- List suggested commits per repository, as actions for the user.
+- List the commits per repository: one per phase, with its suggested
+  message. Nothing is committed until `jira-ship`, which makes them.
 - Give a PR title and description for each repository that has phases,
   covering scope, rationale, testing, and rollout risks. Repositories whose
   phases were all dropped get none.
@@ -257,9 +264,9 @@ phase detail.
   `Add retry to orders (#VFS-1234)`.
 - State the landing order as a list of repositories, with which PR depends on
   which.
-- Close with the next steps, as the user types them: `/code-review` for
-  correctness, `/jira-review` for conformance to this plan, then
-  `/jira-ship`.
+- Close with the next steps: review this plan and tell Sol to implement it;
+  then, as the user types them, `/code-review` for correctness,
+  `/jira-review` for conformance to this plan, and `/jira-ship`.
 
 ## Close the run
 

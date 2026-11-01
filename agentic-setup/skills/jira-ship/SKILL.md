@@ -1,17 +1,18 @@
 ---
 name: jira-ship
-description: 'Turn an implemented, reviewed plan into commits, pull requests, and a Jira update. Commits per repository from the plan, pushes, opens pull requests in landing order with cross-links, and posts one comment on the story. Refuses to run on a plan that is blocked, unfinished, or unverified.'
+description: 'Turn an implemented, reviewed plan into commits, pull requests, and a Jira update. Commits per phase, pushes each repository, opens pull requests in landing order with cross-links, and posts one comment on the story. Refuses to run on a plan that is blocked, unfinished, or unverified.'
 argument-hint: 'Jira key, or nothing to use the plan in this feature folder'
 ---
 
 # Ship the planned change
 
-Land work that is implemented and reviewed: commits per repository, pull
-requests in merge order, and one comment on the story. Implement nothing
-here. If the work is not finished, stop and say so.
+Land work that is implemented and reviewed: commits per phase, pull requests
+in merge order, and one comment on the story. Implement nothing here. If the
+work is not finished, stop and say so.
 
-Invoking this skill authorises pushing and opening pull requests. It does
-not authorise merging, deleting branches, or changing the Jira story's status.
+Invoking this skill authorises committing, pushing, and opening pull
+requests. It does not authorise merging, deleting branches, or changing the
+Jira story's status.
 
 ## Scope
 
@@ -32,28 +33,35 @@ changing nothing, if any of these hold:
 2. Any phase is still `pending`, unless the user says in this session to ship
    what exists.
 3. A repository is not on the feature branch, or you are in a main checkout.
-4. A repository has changes the plan does not account for. List them and ask.
-   Never commit unexplained changes.
+4. A repository has changes, committed or not, that the plan does not
+   account for. List them and ask. Never commit unexplained changes.
 5. A repository has changes but no phases in the plan.
-6. The plan's verification has not been run since the last change. Run it
-   per repository. If anything fails, stop and report. Report pre-existing
-   failures separately; do not fix them here.
-7. `jira-review` has not run in this session since the last change. Run it.
+6. `jira-review` has not run in this session since the last change. Run it.
    Continue only on `Conforms`. On `Diverges` or `Cannot tell`, stop and
-   report its findings.
+   report its findings. Its suggestions for instruction files do not block
+   shipping; list them in your report.
+7. The plan's verification has not passed since the last change. Checks
+   `jira-review` ran after the last change count. Run the rest per
+   repository. If anything fails, stop and report. Report pre-existing
+   failures separately; do not fix them here. Checks the plan leaves to the
+   user, such as those that need a running backend, are listed as not run,
+   in the report and in the pull request description.
 
 A repository whose phases are all `done` or `dropped` and whose diff is empty
 has nothing to ship. Note it in the report and continue.
 
 ## Commit
 
-Per repository with changes:
+Sol does not commit during implementation, so the work is uncommitted in
+each worktree. Commits already on the branch, from an earlier run or made by
+hand, stay as they are. Per repository with uncommitted changes:
 
 1. Follow the repository's commit conventions where it defines them
    (`CONTRIBUTING.md`, a commit template, recent history). Otherwise use the
    commit messages from the plan.
-2. Stage only files the plan accounts for. One commit per phase where the
-   plan separates them, otherwise one commit for the repository.
+2. Stage only files the plan accounts for, including new files. Make one
+   commit per phase, in phase order. Where phases share a file, make one
+   commit for those phases and name them in the body.
 3. Include the Jira key in every commit subject. Use the body for the reason
    behind the change.
 4. Never commit on `main`, never amend or rebase pushed commits, and never
@@ -64,7 +72,9 @@ Per repository with changes:
 1. Push the feature branch per repository, setting upstream on first push.
    Never force-push. If the remote branch has diverged, stop and report.
 2. Open one pull request per repository that has commits, using the plan's
-   title and description. Do not push or open anything for a repository with
+   title and description. If the branch already has an open pull request
+   from an earlier run, push to it and update its description instead of
+   opening another. Do not push or open anything for a repository with
    nothing to ship.
 3. End every title with the Jira key in parentheses:
    `Add retry to orders (#VFS-1234)`. This applies to drafts too.
@@ -86,17 +96,21 @@ Post one comment on the story with `twg`:
 1. What shipped, in a short paragraph.
 2. The pull requests in landing order, each with repository and link; drafts
    marked as drafts, with what they wait on.
-3. The verification run and its result.
-4. Anything left undone and why: dropped phases, follow-up work, known gaps.
-5. The plan file path and the feature branch.
+3. The decisions and provisional decisions in the plan that no earlier
+   comment on the story lists.
+4. The verification run and its result, and any checks left to the user.
+5. Anything left undone and why: dropped phases, follow-up work, known gaps.
+6. The plan file path and the feature branch.
+
+If an earlier run already posted these pull requests, comment again only if
+one was added, and say what changed.
 
 Show the comment body, then post it. Do not change the story's status,
 fields, or assignee unless the user asked in this session.
 
 ## Record and report
 
-In the plan file, mark shipped phases and add each pull request link next to
-its repository.
+In the plan file, add each pull request link next to its repository.
 
 Report to the user per repository: commits, pull request and state,
 verification run, anything skipped, and anything needing their action. Do not
