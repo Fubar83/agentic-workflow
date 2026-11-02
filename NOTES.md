@@ -69,11 +69,14 @@ The core of the talk. Give it time.
 
 ## 5. Outstanding questions stop the run
 
-- If any question is deferred, the agent posts one comment on the story: the
-  decisions made, the provisional decisions, and the open questions with
-  enough context to answer them. All deferred questions go in that one
+- If any question is deferred, the agent drafts one comment for the story:
+  the decisions made, the provisional decisions, and the open questions
+  with enough context to answer them. All deferred questions go in that one
   comment.
-- It then saves the plan, marked blocked, and stops. No implementation.
+- I see the comment before it is posted. I can type changes, and it shows
+  me the new version, until it says what I want. Nothing goes to Jira
+  until I choose Post it.
+- The plan is saved, marked blocked, and the run stops. No implementation.
 - If nothing is deferred, the plan is marked ready and the run still stops,
   for my review. I can ask for changes, and implementation starts when I say
   so.
@@ -307,7 +310,8 @@ use it. The full version is `agentic-setup/AGENTS-AND-SKILLS.md`.
   and the ADRs. Decides reversible questions itself and lists them as
   provisional. Asks the blocking ones: the whole list first, then one at a
   time, with options, my own answer, or Defer to the team. Deferred
-  questions go to the story in one comment, and the plan is marked blocked.
+  questions go to the story in one comment, which I see and can change
+  before it is posted, and the plan is marked blocked.
 - **Why:** expensive questions are settled before any code is written. The
   plan carries everything a fresh session needs, and every later step is
   checked against it.
@@ -348,7 +352,8 @@ use it. The full version is `agentic-setup/AGENTS-AND-SKILLS.md`.
 
 - **What:** prepares stories for a refinement session. No feature folder,
   plan, or estimate.
-- **How:** reads each story against the code on main and posts one comment
-  per story: questions, caveats, special cases, and likely reach.
+- **How:** reads each story against the code on main and drafts one comment
+  per story: questions, caveats, special cases, and likely reach. I see
+  each one first, can change it, and choose whether it is posted.
 - **Why:** refinement starts from concrete questions, and `/jira-plan`
   reads the answers later with the rest of the story.

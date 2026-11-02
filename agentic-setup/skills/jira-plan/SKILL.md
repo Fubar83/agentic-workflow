@@ -1,6 +1,6 @@
 ---
 name: jira-plan
-description: 'Create one implementation plan for Jira stories across every repository in a feature folder. Use for Jira planning, phased implementation plans, acceptance criteria coverage, verification commands, and commit and PR suggestions. Interviews the user first, defers unresolved questions to the story as a single comment, and stops without implementing.'
+description: 'Create one implementation plan for Jira stories across every repository in a feature folder. Use for Jira planning, phased implementation plans, acceptance criteria coverage, verification commands, and commit and PR suggestions. Interviews the user first, defers unresolved questions to the story as a single comment that the user approves before it is posted, and stops without implementing.'
 argument-hint: 'Jira key(s) and optional scope or constraints'
 ---
 
@@ -12,7 +12,8 @@ writes:
 
 1. The plan file.
 2. The `jira:` field in `FEATURE.md`, if it is empty and a key was given.
-3. One comment on the story, if any question is deferred.
+3. One comment on the story, if any question is deferred and the user
+   approves its text.
 
 Do not create branches, worktrees, commits, pull requests, or code changes.
 Do not include time, effort, or duration estimates.
@@ -270,8 +271,8 @@ phase detail.
 
 ## Close the run
 
-**If any question was deferred,** post one comment on the story with `twg`.
-All deferred questions go in that single comment, numbered. Never post one
+**If any question was deferred,** draft one comment for the story. All
+deferred questions go in that single comment, numbered. Never post one
 comment per question, and never post during the interview.
 
 The comment contains:
@@ -284,12 +285,35 @@ The comment contains:
    that someone who was not in the session can answer without follow-up.
 5. The plan file path and the feature branch.
 
-Show the comment body, then post it. Report the plan path, the branch, and
-the open questions, and stop. Do not implement or commit.
+Have the user approve the comment, as below, before anything is posted.
+Then report the plan path, the branch, the open questions, and whether the
+comment was posted, and stop. Do not implement or commit.
 
 **If nothing is outstanding,** report that the plan is ready for review, with
 its path, the repositories, and the branch, and stop. Implementation starts
 when the user says so, usually after reviewing the plan.
+
+### Approve the comment
+
+Nothing goes to Jira until the user approves it, word for word. In yolo
+mode nothing else prompts before a post, so this step is what prevents one.
+
+1. Show the whole comment, exactly as it would be posted.
+2. Ask whether to post it as it is, or what to change. With a question tool
+   such as `ask_user`, the choices are **Post it** and **Don't post**, and
+   the user types changes in the tool's free-text input. Without one, ask
+   in plain text.
+3. On changes, revise the comment, show all of it again, and ask again.
+   Repeat until the user picks Post it or Don't post.
+4. If a change answers a deferred question, record the answer in the plan
+   as a decision and update the plan to match. In the comment, it moves
+   from the open questions to the decisions. If no question is left open,
+   post nothing, set the plan's first line to
+   `Plan status: ready to implement`, and close as when nothing is
+   outstanding.
+5. On Post it, post the comment with `twg`, exactly as last shown. On Don't
+   post, post nothing. The plan stays blocked, and its open questions are
+   there for the user to take to the team another way.
 
 ## Output
 

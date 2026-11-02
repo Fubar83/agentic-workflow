@@ -117,14 +117,16 @@ follows the plan's phases.
 
 Only `jira-ship` commits, pushes, and opens pull requests. Only `jira-plan`
 and `jira-refine` write to Jira, each with at most one comment per story
-per run, shown before it is posted; `jira-ship` writes nothing there.
-Merging is always yours, and no skill changes a story's status.
+per run. Each comment is shown to you first, you can have it changed, and
+it is posted only when you choose Post it. `jira-ship` writes nothing
+there. Merging is always yours, and no skill changes a story's status.
 
 **Why.** Sol runs in yolo mode, so nothing prompts before a command, a push
-included. These rules keep pushes and Jira comments inside the steps you
-start. They are instructions, not a sandbox: the container can reach
-GitHub. A deny rule for `git push` in the start command would enforce the
-push rule, at the cost of pushing by hand.
+or a post included. These rules keep pushes inside the step you start, and
+put nothing on Jira that you have not read. They are instructions, not a
+sandbox: the container can reach GitHub and Jira. A deny rule for
+`git push` in the start command would enforce the push rule, at the cost
+of pushing by hand.
 
 ### The container
 
@@ -280,7 +282,7 @@ every repository in the feature folder, after interviewing you on the
 questions that block it. It writes the plan and stops; it never
 implements. It makes at most three writes: the plan file, the `jira:` field
 in `FEATURE.md` if that is empty, and one Jira comment if a question is
-deferred.
+deferred and you approve the comment.
 
 **How it does it.**
 
@@ -316,11 +318,17 @@ deferred.
   ADRs that apply or are proposed, each acceptance criterion mapped to a
   phase and a check, a pull request title and description per repository,
   and the landing order.
-- **Stops either way.** If anything was deferred, it posts one comment on
-  the story with the decisions, the provisional decisions, and the open
-  questions, each with enough context to answer it without follow-up, marks
-  the plan blocked, and stops. Otherwise it marks the plan ready and stops
-  for your review.
+- **Stops either way.** If anything was deferred, it marks the plan
+  blocked and drafts one comment for the story: the decisions, the
+  provisional decisions, and the open questions, each with enough context
+  to answer it without follow-up. It stops once the comment is posted or
+  you decide against it. Otherwise it marks the plan ready and stops for
+  your review.
+- **Shows you the comment first.** It posts only when you choose Post it.
+  You can type changes instead, and it shows the revised comment and asks
+  again. An answer you give while refining becomes a decision in the plan;
+  if no question is left, nothing is posted and the plan is ready. Don't
+  post leaves the plan blocked, with the questions in it.
 - **Resumes.** Run again, it builds on the saved plan, keeps its decisions,
   re-reads the story for answers, and asks only what is still open. On a
   ready plan, it applies the changes you ask for and keeps the rest.
@@ -336,6 +344,8 @@ deferred.
   from it and an interrupted run can pick up from the file.
 - Deferred questions reach the team in one comment that can be answered
   without follow-up, and the next run picks the answers up from the story.
+- You approve that comment before the team sees it, and can sharpen it
+  first.
 - Provisional decisions are shown too, in the pull request descriptions and
   in this comment when there is one, so the team can object without being
   asked to decide.
@@ -519,10 +529,10 @@ Jira.
 keys, before a refinement session. It needs no feature folder.
 
 **What it does.** Prepares stories for refinement. It reads each story
-against the code it would touch and posts one comment per story with the
+against the code it would touch and drafts one comment per story with the
 questions that block implementation, the caveats, the special cases the
-acceptance criteria miss, and the likely reach. It writes no plan and gives
-no estimate.
+acceptance criteria miss, and the likely reach. Each is posted once you
+approve it. It writes no plan and gives no estimate.
 
 **How it does it.**
 
@@ -545,6 +555,10 @@ no estimate.
   and one line on what code it read. It is written for someone who has not
   seen the code, in a neutral tone. An earlier refinement comment is
   extended or corrected rather than repeated.
+- **Shows you each comment first.** With several stories, it drafts them
+  all before asking anything, so you are not kept waiting. Then it shows
+  each comment in turn and posts it only when you choose Post it. You can
+  type changes and see it again first, or choose Don't post.
 - **Suggests an agenda.** With several stories, it ends with them ordered
   by how much discussion each needs. A story that is already clear is
   reported as clear, with what was checked.
@@ -557,6 +571,7 @@ no estimate.
   time goes to what changes the outcome.
 - The team sees the reach and the caveats before sizing, with no estimate
   made for them.
+- You approve each comment, and can change it, before the team sees it.
 - The comment stays on the story, so when it is scheduled, `jira-plan`
   reads it, and the answers, with the rest of the story.
 
@@ -566,11 +581,11 @@ no estimate.
 | --- | --- | --- | --- | --- |
 | Sol | In the feature folder | Keeps it current | Through `jira-ship` | Through the skills |
 | Luna | Assigned files | No | No | No |
-| `jira-plan` | No | Writes it | No | One comment, if deferred |
+| `jira-plan` | No | Writes it | No | One approved comment, if deferred |
 | `jira-review` | No | No | No | No |
 | `code-review` | No | No | No | No |
 | `jira-ship` | No | Pull request links | Commits, push, pull requests | No |
-| `jira-refine` | No | No | No | One comment per story |
+| `jira-refine` | No | No | No | One approved comment per story |
 
 `FEATURE.md` is written by `wag/feature-manifest.sh`; `jira-plan` only
 fills in its `jira:` field when that is empty.

@@ -110,6 +110,7 @@ plan's verification before it commits.
 | `FEATURE.md` | wag start profile (`autostart`) |
 | Starting Sol | You (`cpyolo`) |
 | `jira-plan` | You (`/jira-plan`), or Sol when there is no plan file |
+| Posting a Jira comment | You, by choosing Post it |
 | Approving the plan | You |
 | Implementation and Luna workers | Sol, when you say to implement |
 | Phase status in the plan | Sol |
@@ -162,6 +163,21 @@ provisional decisions.
 
 All deferred questions go in one Jira comment.
 
+## Jira comments
+
+`jira-plan` and `jira-refine` show each comment before it is posted and
+ask whether to post it. Type what to change in the free-text field, and
+the skill shows the revised comment and asks again. Nothing is posted
+until you choose Post it.
+
+- **Don't post** posts nothing. A blocked plan stays blocked, with its
+  open questions in the plan file for you to raise another way.
+- **Answers while refining.** If a change you type answers one of
+  `jira-plan`'s deferred questions, it becomes a decision in the plan. If
+  none is left open, nothing is posted and the plan is ready.
+- **Several stories.** `jira-refine` drafts every comment first, then asks
+  about each in turn, so you are not kept waiting between questions.
+
 ## Repository rules
 
 - Every change stays inside the feature folder.
@@ -197,9 +213,10 @@ If these change, update the Environment sections in both agent files.
   prompts. Sol and Luna are told never to push outside `jira-ship`. To
   enforce it instead, add a deny rule for `git push` to the start command and
   push by hand; deny rules apply even with `--yolo`.
-- **Jira comments are posted without confirmation.** `jira-plan` and
-  `jira-refine` show the comment and then post it. `jira-ship` writes
-  nothing to Jira.
+- **Jira comments are guarded by instructions too.** `jira-plan` and
+  `jira-refine` post a comment only once you approve it, but with `--yolo`
+  nothing else prompts before `twg` runs. `jira-ship` writes nothing to
+  Jira.
 - **Pull requests need `gh` and a GitHub remote.** On other hosts,
   `jira-ship` prints the title and description instead.
 - **`--yolo` can be switched off by policy.** When
@@ -250,8 +267,11 @@ Nothing has been run end to end yet. Check, in order:
    questions are listed first, then asked one at a time, with the suggested
    options and Defer to the team as choices. Type your own answer to one and
    check it is recorded as a decision.
-9. Defer one question. Expect one Jira comment, a plan file starting with
-   `Plan status: blocked on Jira answers`, and the run stopping.
+9. Defer one question. Expect the draft comment and a question: post it,
+   or type what to change. Type a change, check that the comment comes
+   back with it, then choose Post it. Expect one Jira comment, a plan file
+   starting with `Plan status: blocked on Jira answers`, and the run
+   stopping.
 10. Implementation: Sol starts a Luna worker per repository. `/tasks` shows
     whether they run at the same time, and that no worker starts its own.
     Each worker's report lists the instruction files it read. When Sol
@@ -271,6 +291,9 @@ Nothing has been run end to end yet. Check, in order:
     decisions in each description, dependent pull requests opened as
     drafts, and no comment on the story. Run it again after a small change:
     it should push to the open pull requests, not open new ones.
+14. `/jira-refine` on two stories. Expect it to read both before asking
+    anything, then to show each comment and ask about it in turn. Choose
+    Don't post for one, and check that nothing reached that story.
 
 ## Conventions
 
@@ -278,3 +301,4 @@ Nothing has been run end to end yet. Check, in order:
 - Pull request titles end with the key in parentheses:
   `Add retry to orders (#VFS-1234)`.
 - Deferred questions go in one Jira comment per run.
+- Nothing is posted to Jira until you approve the comment.

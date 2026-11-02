@@ -1,14 +1,15 @@
 ---
 name: jira-refine
-description: 'Prepare Jira stories for a refinement session: read each story against the code it would touch, then post one comment with the questions that block implementation, the caveats, and the special cases the acceptance criteria miss. Read-only on code; writes nothing but the comment; produces no plan or estimate.'
+description: 'Prepare Jira stories for a refinement session: read each story against the code it would touch, then draft one comment with the questions that block implementation, the caveats, and the special cases the acceptance criteria miss, and post it once the user approves it. Read-only on code; writes nothing but the approved comment; produces no plan or estimate.'
 argument-hint: 'Jira key(s) to refine, and optionally the repositories likely involved'
 ---
 
 # Prepare stories for refinement
 
 Run this before a refinement session, on the stories up for discussion. Read
-each story against the code it would touch and post what an implementer would
-need answered, so the session starts from concrete questions.
+each story against the code it would touch and draft what an implementer
+would need answered, so the session starts from concrete questions. The user
+approves each comment, and can change it, before it is posted.
 
 This is preparation, not planning. There is no feature folder, branch, or
 plan, and nothing here assumes the work will go ahead.
@@ -16,7 +17,9 @@ plan, and nothing here assumes the work will go ahead.
 The audience is the team: the story's author and the people who will discuss
 it. Keep the comment short and specific.
 
-Given several keys, handle them one at a time and post one comment per story.
+Given several keys, read and draft one story at a time, one comment per
+story. Then go through the drafts with the user in turn, so they are not
+kept waiting between questions.
 
 Produce no plan file, phases, branch, estimate, or implementation. If a story
 is already clear, say so in one sentence and move on. Do not raise concerns
@@ -24,7 +27,7 @@ for the sake of it.
 
 ## Boundaries
 
-The only write is one comment per story.
+The only write is one comment per story, once the user approves it.
 
 - Read the story through `twg` (Atlassian Teamwork Graph CLI): description,
   acceptance criteria, linked issues, and all existing comments. A question
@@ -70,7 +73,7 @@ points in a short list at the end, or leave them out.
 
 ## Write the comment
 
-One comment per story, posted with `twg`:
+One comment per story:
 
 1. **Understanding:** two or three sentences restating the story, so the team
    can correct a misreading.
@@ -84,11 +87,26 @@ Write for a reader who has not seen the code. Give file paths context, avoid
 internal shorthand, and keep the tone neutral; gaps in a story are what
 refinement is for.
 
-Show the comment body, then post it.
+## Approve and post
+
+Nothing goes to Jira until the user approves it, word for word. In yolo
+mode nothing else prompts before a post, so this step is what prevents one.
+For each draft in turn:
+
+1. Show the whole comment, exactly as it would be posted.
+2. Ask whether to post it as it is, or what to change. With a question tool
+   such as `ask_user`, the choices are **Post it** and **Don't post**, and
+   the user types changes in the tool's free-text input. Without one, ask
+   in plain text.
+3. On changes, revise the comment, show all of it again, and ask again.
+   Repeat until the user picks Post it or Don't post.
+4. On Post it, post the comment with `twg`, exactly as last shown. On Don't
+   post, post nothing on that story.
 
 ## Report
 
-For each story, report what was posted and its most important open question.
+For each story, report whether its comment was posted, and its most
+important open question.
 If a story was already clear, say so and say what you checked.
 
 With several stories, finish with a list ordered by how much discussion each

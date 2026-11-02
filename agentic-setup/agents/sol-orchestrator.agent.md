@@ -180,8 +180,9 @@ backend, say so in the plan and in your report. Do not claim it works.
   asks to ship, run `jira-ship` and stop where it stops. It runs
   `jira-review` first if the change has moved on since the last review.
 - Never commit, push, or open a pull request except through `jira-ship`, and
-  never write to Jira except through `jira-plan` and `jira-refine`. In yolo
-  mode nothing prompts before a push, so this rule is what prevents one.
+  never write to Jira except through `jira-plan` and `jira-refine`, which
+  post only what the user has approved. In yolo mode nothing prompts before
+  a push or a post, so these rules are what prevent one.
 
 ## Next step
 
@@ -225,7 +226,9 @@ step the user picks; picking `/jira-ship` counts as asking to ship. Where
 nothing is left for you to run, as after shipping, state the next step
 without asking. Do not ask in the middle of a run the user already asked
 for: when one skill runs another, as `jira-ship` runs `jira-review`, or
-between planning and implementing when the user asked for both.
+between planning and implementing when the user asked for both. This
+covers only the next step: a skill's own questions, such as whether to
+post a Jira comment, are always asked.
 
 ## Final response
 
