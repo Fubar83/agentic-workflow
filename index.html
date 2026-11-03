@@ -21,12 +21,12 @@
      ====================================================================== -->
 <main class="deck" id="deck">
 
-  <!-- 1 — Title -->
+  <!-- 1: title -->
   <section class="slide slide--title" data-anim>
     <span class="rule"></span>
     <span class="eyebrow">Internal presentation</span>
     <h1 class="display">My agentic<br><em>workflow</em></h1>
-    <p class="lede">Jira story to pull request.</p>
+    <p class="lede">From Jira to pull requests</p>
     <div class="byline">
       <span class="avatar">HJ</span>
       <div>
@@ -36,320 +36,233 @@
     </div>
   </section>
 
-  <!-- 2 — Chapter 01 -->
-  <section class="slide slide--section" data-anim>
-    <span class="ghost" aria-hidden="true">01</span>
-    <span class="rule"></span>
-    <span class="eyebrow">Chapter one</span>
-    <h2 class="display">The loop</h2>
-  </section>
-
-  <!-- 3 — The loop -->
+  <!-- 2: the workflow as an outline, in the order the rest of the talk
+       follows, with the tool for each step -->
   <section class="slide">
     <header class="slide__head">
-      <span class="eyebrow">01 · The loop</span>
-      <h2>Seven steps, one pass</h2>
+      <span class="eyebrow">01 · The workflow</span>
+      <h2>Seven steps, story to pull requests</h2>
     </header>
     <ol class="steps steps--bare" data-anim>
-      <li><h3>Feature folder</h3></li>
-      <li><h3>Agent starts there</h3></li>
-      <li><h3>Plan from the story</h3></li>
+      <li><h3>Feature folder <code>wag</code> <code>cpyolo</code></h3></li>
+      <li><h3>Plan from the story <code>/jira-plan</code></h3></li>
       <li><h3>Review the plan</h3></li>
       <li><h3>Implement</h3></li>
-      <li><h3>Review what came out</h3></li>
-      <li><h3>Commit and ship</h3></li>
+      <li><h3>Test by hand</h3></li>
+      <li><h3>Review <code>/jira-review</code> <code>/code-review</code></h3></li>
+      <li><h3>Ship <code>/jira-ship</code></h3></li>
     </ol>
   </section>
 
-  <!-- 4 — The plan step -->
+  <!-- 3: the agents, side by side: what Sol does and what Luna does -->
+  <section class="slide">
+    <header class="slide__head">
+      <span class="eyebrow">02 · The agents</span>
+      <h2>Sol decides, Luna helps</h2>
+    </header>
+    <div class="cols" data-anim>
+      <article class="tool">
+        <span class="tool__name">Sol · the orchestrator</span>
+        <ul class="ticks">
+          <li>Runs the skills and implements</li>
+          <li>Decides what to hand to Luna</li>
+          <li>Supervises Luna, checks everything</li>
+        </ul>
+      </article>
+      <article class="tool">
+        <span class="tool__name">Luna · the worker</span>
+        <ul class="ticks">
+          <li>One task, in one repo</li>
+          <li>Searches, writes code, runs tests</li>
+          <li>Reports back to Sol</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <!-- 4: the skills of the flow, in the order a story meets them, and
+       /jira-refine apart, since it is not part of the flow -->
+  <section class="slide">
+    <header class="slide__head">
+      <span class="eyebrow">03 · The skills</span>
+      <h2>Four skills for the flow</h2>
+    </header>
+    <ol class="steps steps--names" data-anim>
+      <li><h3><code>/jira-plan</code></h3><p>Interrogates me, then writes one plan for every repo</p></li>
+      <li><h3><code>/jira-review</code></h3><p>After implementing: is it what the plan says?</p></li>
+      <li><h3><code>/code-review</code></h3><p>Then: is the code right?</p></li>
+      <li><h3><code>/jira-ship</code></h3><p>Commits and opens the pull requests</p></li>
+    </ol>
+    <p class="footnote">The plan they share: <code>.working-docs/VFS-1234.md</code></p>
+    <div class="cols">
+      <article class="tool">
+        <span class="tool__name">Separate, not part of the flow</span>
+        <p><code>/jira-refine</code> posts questions on a story before refinement</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- 5: the plan step, with the question as the prompt shows it. The
+       question deferred here is the first one in the comment on slide 6 -->
   <section class="slide slide--split">
     <div class="split__text">
       <header class="slide__head">
-        <span class="eyebrow">01 · The loop</span>
+        <span class="eyebrow">04 · The plan</span>
         <h2>The plan step closes the gaps</h2>
       </header>
       <div data-anim>
         <ul class="ticks">
           <li>Only blocking questions are asked</li>
-          <li>Options, your own answer, or <strong>"Defer to the team"</strong></li>
-          <li>Reversible choices decided and listed</li>
-          <li>Decisions and deferrals both recorded</li>
+          <li>Reversible ones are decided and listed</li>
+          <li>Every answer goes in the plan</li>
         </ul>
       </div>
     </div>
     <aside class="split__visual">
-      <div class="card">
-        <div class="card__bar"><span></span><span></span><span></span></div>
-        <div class="card__body">
-          <p class="muted qa__q">Which service owns the retry?</p>
-          <p class="task done">Orders (current behaviour)</p>
-          <p class="task">Dispatch (new endpoint)</p>
-          <p class="task">Your own answer</p>
-          <p class="task active">Defer to the team <span class="badge">stops the run</span></p>
-        </div>
-      </div>
+      <pre class="code"><code><span class="c">question 1 of 2</span>
+Which service owns the retry?
+
+<span class="k">A</span>  integration, as today
+<span class="k">B</span>  providerdata, new endpoint
+<span class="k">C</span>  your own answer
+<span class="k">D</span>  defer to the team</code></pre>
     </aside>
   </section>
 
-  <!-- 5 — The Jira gate, mirrored so it does not repeat slide 4 -->
+  <!-- 6: twg, Atlassian's Teamwork Graph CLI. The skills read stories with
+       it and post only the comments I confirm. Question 1 is the one
+       deferred on slide 5; mirrored, so it does not repeat slide 5 -->
   <section class="slide slide--split">
     <aside class="split__visual">
-      <div class="card">
-        <div class="card__bar"><span></span><span></span><span></span></div>
-        <div class="card__body">
-          <span class="eyebrow">VFS-1234 · comment</span>
-          <p class="qa__q">Decisions so far</p>
-          <p class="task done">Retry stays in Orders</p>
-          <p class="task done">No schema change</p>
-          <p class="qa__q">Open questions</p>
-          <p class="task">Who owns the dead-letter queue?</p>
-          <p class="task">Is the old endpoint still in use?</p>
-        </div>
-      </div>
+      <pre class="code"><code><span class="c">comment on VFS-1234</span>
+1. Which service owns the retry?
+   <span class="k">A</span>  integration, as today
+   <span class="k">B</span>  providerdata, new endpoint
+2. Is the old endpoint still in use?
+   <span class="k">A</span>  yes, keep it
+   <span class="k">B</span>  no, remove it
+
+<span class="c">Post it · Don't post</span></code></pre>
     </aside>
     <div class="split__text">
       <header class="slide__head">
-        <span class="eyebrow">01 · The loop</span>
-        <h2>Outstanding questions stop the run</h2>
+        <span class="eyebrow">05 · twg</span>
+        <h2>Jira, through twg</h2>
       </header>
       <div data-anim>
+        <pre class="code"><code>twg jira workitem get VFS-1234</code></pre>
         <ul class="ticks">
-          <li>Plan saved, marked <code>blocked</code></li>
-          <li>Questions drafted as one comment</li>
-          <li>Posted to the ticket once I approve it</li>
-          <li>Nothing open, on to the plan review</li>
+          <li>Reads the story and its comments</li>
+          <li>Deferred questions go back in one comment</li>
+          <li>Posted only when I confirm</li>
         </ul>
       </div>
     </div>
   </section>
 
-  <!-- 6 — Review and ship -->
+  <!-- 7: after implementing: test by hand, the two reviews, and shipping -->
   <section class="slide">
     <header class="slide__head">
-      <span class="eyebrow">01 · The loop</span>
-      <h2>Two reviews, then ship</h2>
+      <span class="eyebrow">06 · Test and review</span>
+      <h2>Test, review, then ship</h2>
     </header>
     <ul class="bullets" data-anim>
       <li>
+        <span class="icon">▶</span>
+        <div><h3>Does it work?</h3><p>By hand, in Rider and the dev server.</p></div>
+      </li>
+      <li>
         <span class="icon">≡</span>
-        <div><h3>Is it what we agreed?</h3><p><code>/jira-review</code>. Against the plan: every phase landed, nothing extra.</p></div>
+        <div><h3>Is it what we agreed?</h3><p><code>/jira-review</code>, against the plan.</p></div>
       </li>
       <li>
         <span class="icon">⌕</span>
-        <div><h3>Is the code right?</h3><p><code>/code-review</code>, my own skill. Side effects and regressions, against main.</p></div>
+        <div><h3>Is the code right?</h3><p><code>/code-review</code>, against main.</p></div>
       </li>
       <li>
         <span class="icon">↗</span>
-        <div><h3>Then ship it</h3><p><code>/jira-ship</code>. A commit per phase, pull requests in merge order.</p></div>
+        <div><h3>Ship it</h3><p><code>/jira-ship</code>: a commit per phase, pull requests in order.</p></div>
       </li>
     </ul>
   </section>
 
-  <!-- 7: the loop as a flowchart. js/flow.js draws the Mermaid source
-       below; the fallback line stays if Mermaid cannot load -->
+  <!-- 8: the whole loop as a flowchart. js/flow.js draws the Mermaid
+       source below; the fallback line stays if Mermaid cannot load -->
   <section class="slide slide--split">
     <div class="split__text">
       <header class="slide__head">
-        <span class="eyebrow">01 · The loop</span>
+        <span class="eyebrow">07 · All together</span>
         <h2>From story to pull requests</h2>
       </header>
       <div data-anim>
         <ul class="ticks">
-          <li>Thick line: the run when all goes well</li>
-          <li>Side loops: deferred questions, <code>Diverges</code></li>
-          <li>Dotted: a small change skips <code>/code-review</code></li>
-          <li>Gold: where I decide</li>
+          <li>Gold: where I step in</li>
+          <li>Thick: the usual path</li>
+          <li>Dotted: a small change skips review</li>
         </ul>
       </div>
     </div>
     <figure class="flowchart">
-      <p class="flowchart__fallback">Story → /jira-plan → plan review → implement → /jira-review → /code-review → /jira-ship → pull requests</p>
+      <p class="flowchart__fallback">Story → /jira-plan → answer → plan review → implement → test by hand → /jira-review → /code-review → /jira-ship → merge</p>
       <script type="text/x-mermaid">
 flowchart TB
   accTitle: From story to pull requests
-  accDescr: The story goes to /jira-plan, and deferred questions go back to it. After the plan review, Sol and Luna implement. /jira-review sends a diverging change back to implementation and a conforming one on to /code-review, or on a small change straight to /jira-ship. After the fixes you pick, /jira-ship opens the pull requests, which you merge.
+  accDescr: The story goes to /jira-plan, and its questions are answered. Deferred questions go to the team, whose answers come back to /jira-plan. In the plan review, Sol makes the changes asked for until the plan is approved; then Sol and Luna implement. The change is tested by hand, and bugs go back to implementation. /jira-review sends anything missing back to implementation. Then it goes on to /code-review, or skips that review and goes straight to /jira-ship. If /code-review has comments, the ones to fix are picked and fixed, and /code-review can run again; with no comments it goes straight on. /jira-ship checks the change against the plan again if it changed, opens the pull requests, and they are merged.
 
-  story["Jira story"]
+  story["Story"]
   plan["/jira-plan"]:::skill
-  team["Team answers<br>on the story"]
-  review["Plan review"]:::you
-  build["Sol + Luna implement"]
+  ask["Answer"]:::you
+  team["Team answers"]
+  review["Plan review"]:::focus
+  build["Implement"]
   jr["/jira-review"]:::skill
-  fix["Sol fixes"]
   cr["/code-review"]:::skill
+  pick["Pick fixes"]:::you
+  fix["Fix"]
+  test["Test by hand"]:::you
   ship["/jira-ship"]:::skill
-  prs["Pull requests<br>you merge"]:::you
+  prs["Merge"]:::you
 
-  %% the run when all goes well: thick, straight down. The longer links
-  %% (===>) leave a row free for the loop beside them
+  %% the run when all goes well: thick, straight down
   story ==> plan
-  plan ===> review
-  review ==> build
-  build ==> jr
-  jr ===>|Conforms| cr
-  cr ==>|fixes you pick| ship
+  plan ==> ask
+  ask ==> review
+  review ==>|approved| build
+  build ==> test
+  test ==> jr
+  jr ===>|review| cr
+  cr ==>|comments| pick
+  pick ==> fix
+  fix ==> ship
   ship ==> prs
 
-  %% the loops off to the side, and the shortcut for a small change
-  plan -->|questions deferred| team
-  team --> plan
-  jr -->|Diverges| fix
-  fix --> jr
-  jr -.->|small change| ship
+  %% the ways back, off to the side, and the shortcut for a small change
+  ask -->|deferred| team
+  team -->|answers| plan
+  review -->|changes| review
+  test -->|bugs| build
+  jr -->|missing| build
+  fix -->|again| cr
+  cr -->|no comments| ship
+  jr -.->|skip review| ship
       </script>
     </figure>
   </section>
 
-  <!-- 8 — Chapter 02 -->
+  <!-- 9: demo. RUN, as you would start a program on a C64 -->
   <section class="slide slide--section" data-anim>
-    <span class="ghost" aria-hidden="true">02</span>
+    <span class="ghost" aria-hidden="true">RUN</span>
     <span class="rule"></span>
-    <span class="eyebrow">Chapter two</span>
-    <h2 class="display">What makes it work</h2>
-  </section>
-
-  <!-- 9 — The feature folder -->
-  <section class="slide slide--split">
-    <div class="split__text">
-      <header class="slide__head">
-        <span class="eyebrow">02 · What makes it work</span>
-        <h2>One folder, every repo</h2>
-      </header>
-      <div data-anim>
-        <ul class="ticks">
-          <li>One branch name across all of them</li>
-          <li>Main checkouts stay clean</li>
-          <li>Repos can join mid-plan</li>
-          <li>Some change nothing at all</li>
-        </ul>
-      </div>
-    </div>
-    <aside class="split__visual">
-      <div class="card">
-        <div class="card__bar"><span></span><span></span><span></span></div>
-        <div class="card__body">
-          <p class="task active">features/feature-vfs-1234/</p>
-          <p class="task">├─ fsp-marketconfiguration-service</p>
-          <p class="task">├─ fsp-providerdata-service</p>
-          <p class="task">└─ fsp-integration-service</p>
-        </div>
-      </div>
-    </aside>
-  </section>
-
-  <!-- 10 — The plan file, mirrored so it does not repeat slide 9 -->
-  <section class="slide slide--split">
-    <aside class="split__visual">
-      <div class="card">
-        <div class="card__bar"><span></span><span></span><span></span></div>
-        <div class="card__body">
-          <span class="eyebrow">VFS-1234 · plan</span>
-          <p class="qa__q">Plan status: ready to implement</p>
-          <p class="task done">1 · marketconfiguration <span class="badge">done</span></p>
-          <p class="task active">2 · integration <span class="badge">pending</span></p>
-          <p class="task">3 · providerdata <span class="badge">dropped</span></p>
-          <p class="qa__q">Lessons</p>
-          <p class="task">README test command is out of date</p>
-        </div>
-      </div>
-    </aside>
-    <div class="split__text">
-      <header class="slide__head">
-        <span class="eyebrow">02 · What makes it work</span>
-        <h2>One plan, every step</h2>
-      </header>
-      <div data-anim>
-        <ul class="ticks">
-          <li><code>/jira-plan</code> writes it</li>
-          <li>Sol marks phases done or dropped</li>
-          <li><code>/jira-review</code> and <code>/jira-ship</code> read it</li>
-          <li>A fresh session can pick it up</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- 11 — The agents and how they split work -->
-  <section class="slide slide--split">
-    <div class="split__text">
-      <header class="slide__head">
-        <span class="eyebrow">02 · What makes it work</span>
-        <h2>Sol delegates, then integrates</h2>
-      </header>
-      <div data-anim>
-        <pre class="code"><code>cpyolo</code></pre>
-        <ul class="ticks">
-          <li>Bounded work goes to a worker</li>
-          <li>One per repo, so they cannot collide</li>
-          <li>Sol keeps the reasoning and the diff</li>
-        </ul>
-      </div>
-    </div>
-    <aside class="split__visual">
-      <div class="card">
-        <div class="card__bar"><span></span><span></span><span></span></div>
-        <div class="card__body">
-          <p class="task active">sol <span class="badge">plan in hand</span></p>
-          <p class="task">├─ luna · marketconfiguration</p>
-          <p class="task">├─ luna · providerdata</p>
-          <p class="task">└─ luna · integration</p>
-          <p class="task active">sol → integrate and verify</p>
-        </div>
-      </div>
-    </aside>
-  </section>
-
-  <!-- 12 — Chapter 03 -->
-  <section class="slide slide--section" data-anim>
-    <span class="ghost" aria-hidden="true">03</span>
-    <span class="rule"></span>
-    <span class="eyebrow">Chapter three</span>
-    <h2 class="display">Where it runs</h2>
-  </section>
-
-  <!-- 13 — The container sets the limits -->
-  <section class="slide slide--split">
-    <div class="split__text">
-      <header class="slide__head">
-        <span class="eyebrow">03 · Where it runs</span>
-        <h2>The container sets the limits</h2>
-      </header>
-      <div data-anim>
-        <ul class="ticks">
-          <li>No internet. Proxy, pre-approved domains</li>
-          <li>No AWS access</li>
-          <li>One port, for front-end dev servers</li>
-          <li>Backends run in Rider, outside the box</li>
-        </ul>
-      </div>
-    </div>
-    <aside class="split__visual">
-      <div class="card">
-        <div class="card__bar"><span></span><span></span><span></span></div>
-        <div class="card__body">
-          <p class="task done">read src/Orders/Handler.cs</p>
-          <p class="task done">edit src/Orders/Handler.cs</p>
-          <p class="task active">run dotnet test</p>
-          <p class="task">git push <span class="badge">/jira-ship only</span></p>
-        </div>
-      </div>
-    </aside>
-  </section>
-
-  <!-- 14 — Chapter 04 · Demo -->
-  <section class="slide slide--section" data-anim>
-    <span class="ghost" aria-hidden="true">04</span>
-    <span class="rule"></span>
-    <span class="eyebrow">Chapter four</span>
+    <span class="eyebrow">Live</span>
     <h2 class="display">Demo</h2>
     <ul class="ticks">
-      <li>One folder, several repos</li>
-      <li>The plan review</li>
-      <li>A question deferred, the run stops</li>
+      <li>One story, several repos</li>
+      <li>The plan and its questions</li>
+      <li>A question posted with twg</li>
     </ul>
   </section>
 
-  <!-- 15 — What I like -->
+  <!-- 10: what I like -->
   <section class="slide">
     <header class="slide__head">
       <span class="eyebrow">In closing</span>
@@ -358,20 +271,20 @@ flowchart TB
     <div class="cols" data-anim>
       <article class="tool">
         <span class="tool__name">Setup</span>
-        <p>One folder and one command, with every repo in it.</p>
+        <p>One folder, one command, every repo.</p>
       </article>
       <article class="tool">
         <span class="tool__name">Questions</span>
-        <p>Answered before any code is written, or handed to the team.</p>
+        <p>Answered before any code is written.</p>
       </article>
       <article class="tool">
         <span class="tool__name">Record</span>
-        <p>Open questions land on the ticket, with what was already decided.</p>
+        <p>The decisions travel with the pull requests.</p>
       </article>
     </div>
   </section>
 
-  <!-- 16 — Closing -->
+  <!-- 11: closing -->
   <section class="slide slide--title slide--split">
     <div class="split__text" data-anim>
       <span class="rule"></span>
@@ -383,7 +296,6 @@ flowchart TB
     <!-- F, S and P play pong, drawn by js/pong.js -->
     <aside class="split__visual">
       <div class="card card--pong">
-        <div class="card__bar"><span></span><span></span><span></span></div>
         <canvas class="pong" role="img" aria-label="The letters F, S and P playing pong"></canvas>
       </div>
     </aside>
@@ -400,7 +312,7 @@ flowchart TB
   <span class="chrome__brand">My agentic workflow</span>
   <nav class="chrome__nav" aria-label="Slide navigation">
     <button class="btn" id="prev" aria-label="Previous slide">←</button>
-    <span class="counter"><span id="current">1</span><span class="counter__sep">/</span><span id="total">16</span></span>
+    <span class="counter"><span id="current">1</span><span class="counter__sep">/</span><span id="total">11</span></span>
     <button class="btn" id="next" aria-label="Next slide">→</button>
   </nav>
 </footer>

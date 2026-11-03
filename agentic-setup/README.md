@@ -165,18 +165,27 @@ All deferred questions go in one Jira comment.
 
 ## Jira comments
 
-`jira-plan` and `jira-refine` show each comment before it is posted and
-ask whether to post it. Type what to change in the free-text field, and
-the skill shows the revised comment and asks again. Nothing is posted
-until you choose Post it.
+`jira-plan` and `jira-refine` never post without your confirmation. Each
+shows the comment as the team will read it, names the story, and asks:
+Post it or Don't post. Type what to change in the free-text field, and
+the skill shows the revised comment and asks again. A confirmation covers
+only the text you saw.
 
-- **Don't post** posts nothing. A blocked plan stays blocked, with its
-  open questions in the plan file for you to raise another way.
+- **Don't post** posts nothing. A blocked plan stays blocked, and the
+  draft stays in `.working-docs/<jira-key>-comment.md` for you to use
+  another way.
 - **Answers while refining.** If a change you type answers one of
   `jira-plan`'s deferred questions, it becomes a decision in the plan. If
   none is left open, nothing is posted and the plan is ready.
 - **Several stories.** `jira-refine` drafts every comment first, then asks
   about each in turn, so you are not kept waiting between questions.
+
+The comments are written to be read quickly, on a phone too. They open
+with what the team needs to do. Each question is a bold line with a
+sentence or two of context, then its options as a lettered list, each
+with what it would change. The team can answer with a number and a
+letter, such as 1B, and the next `jira-plan` run reads answers in that
+form. The skills post Markdown, which `twg` turns into Jira formatting.
 
 ## Repository rules
 
@@ -214,9 +223,13 @@ If these change, update the Environment sections in both agent files.
   enforce it instead, add a deny rule for `git push` to the start command and
   push by hand; deny rules apply even with `--yolo`.
 - **Jira comments are guarded by instructions too.** `jira-plan` and
-  `jira-refine` post a comment only once you approve it, but with `--yolo`
+  `jira-refine` post a comment only once you confirm it, but with `--yolo`
   nothing else prompts before `twg` runs. `jira-ship` writes nothing to
   Jira.
+- **`twg`'s comment flags come from its help.** Its command catalog lists
+  `twg jira workitem comment create`, with HTML, Markdown, or plain text
+  bodies, but not the flags. The skills read them from `--help` and set
+  Markdown explicitly. Checklist item 9 shows whether the result renders.
 - **Pull requests need `gh` and a GitHub remote.** On other hosts,
   `jira-ship` prints the title and description instead.
 - **`--yolo` can be switched off by policy.** When
@@ -271,7 +284,9 @@ Nothing has been run end to end yet. Check, in order:
    or type what to change. Type a change, check that the comment comes
    back with it, then choose Post it. Expect one Jira comment, a plan file
    starting with `Plan status: blocked on Jira answers`, and the run
-   stopping.
+   stopping. On the story, check that the comment renders: bold question
+   lines, lettered options, and no stray `**`. Then reply `1A` and run
+   `jira-plan` again: it should take that as the answer.
 10. Implementation: Sol starts a Luna worker per repository. `/tasks` shows
     whether they run at the same time, and that no worker starts its own.
     Each worker's report lists the instruction files it read. When Sol
@@ -300,5 +315,6 @@ Nothing has been run end to end yet. Check, in order:
 - Commit subjects include the Jira key.
 - Pull request titles end with the key in parentheses:
   `Add retry to orders (#VFS-1234)`.
-- Deferred questions go in one Jira comment per run.
-- Nothing is posted to Jira until you approve the comment.
+- Deferred questions go in one Jira comment per run, with lettered options,
+  so they can be answered as 1B.
+- Nothing is posted to Jira until you confirm the comment.

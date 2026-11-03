@@ -128,8 +128,9 @@ checks not run, callers not inspected, or rollout uncertainty. End with a
 brief summary.
 
 The user decides which findings to fix. In a feature folder, close with the
-next steps: tell Sol which findings to fix, by number, then run
-`/jira-ship`, which reviews the fixes against the plan before it commits.
+next steps: tell Sol which findings to fix, by number; optionally run
+`/code-review` again on the fixes; then run `/jira-ship`, which reviews the
+fixes against the plan before it commits.
 
 ## Output
 

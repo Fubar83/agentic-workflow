@@ -28,11 +28,11 @@
   --font: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
-  /* a little 1982: the cards are small CRTs, in C64 screen colours */
-  --c64-screen: #352a86;
-  --c64-bezel:  #5e4fb8;
-  --c64-text:   #b9adf7;
-  --c64-bright: #eeee77;
+  /* a little 1982: the pong screen is a C64, border and all */
+  --c64-border: #7c70da;   /* light blue, the border          */
+  --c64-screen: #352a86;   /* blue, the screen                 */
+  --c64-text:   #b9adf7;   /* light blue, lifted to read well  */
+  --c64-bright: #eeee77;   /* yellow                           */
 
   /* geometry — square by design */
   --pad: 7.5vw;
@@ -527,6 +527,15 @@ strong { font-weight: 600; }
 .steps--bare h3 { font-size: 1.5rem; }
 .steps--bare li::after { top: 2rem; bottom: -1.25rem; }
 .steps p { margin: .15rem 0 0; font-size: 1rem; color: var(--fg-dim); }
+/* the tool beside a step's label */
+.steps h3 code {
+  margin-left: .7rem;
+  font-size: .6em;
+  letter-spacing: .02em;
+  vertical-align: .14em;
+}
+/* steps that are names, such as the skills on slide 4 */
+.steps--names h3 code { margin-left: 0; font-size: .9em; vertical-align: 0; }
 
 /* ---------- inline code + badge --------------------------------------- */
 
@@ -550,14 +559,6 @@ code {
   vertical-align: middle;
 }
 
-.qa__q {
-  margin: .3rem 0 .2rem;
-  font-size: 1.02rem;
-  font-weight: 500;
-  color: var(--fg);
-}
-.card__body .eyebrow { margin-bottom: .4rem; color: var(--fg-dim); }
-
 /* ---------- closing slide: text beside the pong field ----------------- */
 
 .slide--title.slide--split .split__text {
@@ -568,6 +569,13 @@ code {
 }
 .slide--title.slide--split .display { font-size: clamp(3.8rem, 8vw, 6rem); }
 
+/* the light-blue border of a C64 screen, around the field */
+.card {
+  position: relative;
+  padding: 1.5rem;
+  background: var(--c64-border);
+  box-shadow: 0 2rem 4rem rgba(0, 0, 0, .5);
+}
 /* 4:3, and never taller than the space between the frame margins */
 .card--pong { width: min(100%, calc((100vh - 18rem) * 4 / 3)); margin-inline: auto; }
 .pong { display: block; width: 100%; aspect-ratio: 4 / 3; }
@@ -584,63 +592,6 @@ code {
 .split__text p { color: var(--fg-dim); font-size: 1.1rem; max-width: 34em; }
 .split__text .slide__head h2 { font-size: 2.8rem; }
 .split__visual .footnote { margin-top: 1.1rem; text-align: center; }
-
-.card {
-  position: relative;
-  border: 3px solid var(--c64-bezel);
-  background: var(--c64-screen);
-  box-shadow: 0 2rem 4rem rgba(0, 0, 0, .5);
-}
-.card__bar {
-  display: flex;
-  gap: .45rem;
-  padding: .7rem 1.1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, .16);
-  background: var(--c64-bezel);
-}
-.card__bar span {
-  width: .45rem; height: .45rem;
-  background: rgba(255, 255, 255, .35);
-}
-.card__bar span:first-child { background: var(--c64-bright); }
-.card__body {
-  padding: 1.4rem 1.5rem;
-  display: grid;
-  gap: .7rem;
-  text-shadow: 0 0 6px rgba(185, 173, 247, .45);   /* phosphor bleed */
-}
-.task {
-  position: relative;
-  margin: 0;
-  padding-left: 1.7rem;
-  font-family: var(--mono);
-  font-size: .88rem;
-  color: var(--c64-text);
-}
-.task::before {
-  content: "";
-  position: absolute;
-  left: .1rem; top: .5em;
-  width: .45rem; height: .45rem;
-  border: 1px solid rgba(255, 255, 255, .28);
-}
-.task.done::before {
-  background: var(--c64-text);
-  border-color: var(--c64-text);
-}
-.task.done { opacity: .66; }
-.task.active { color: var(--c64-bright); }
-.task.active::before {
-  background: var(--c64-bright);
-  border-color: var(--c64-bright);
-}
-.card .qa__q { color: #fff; }
-.card__body .eyebrow { color: var(--c64-bright); }
-.card .badge {
-  border-color: rgba(255, 255, 255, .3);
-  background: rgba(0, 0, 0, .2);
-  color: var(--c64-text);
-}
 
 /* ---------- stats ----------------------------------------------------- */
 
@@ -714,6 +665,13 @@ code {
   stroke-width: 1px !important;
 }
 .flowchart .node.you rect { fill: var(--gold-dim) !important; stroke: var(--accent) !important; }
+/* the plan review, where most of my work is, gets a heavier frame */
+.flowchart .node.focus rect {
+  fill: var(--gold-dim) !important;
+  stroke: var(--accent) !important;
+  stroke-width: 3px !important;
+}
+.flowchart .node.focus .nodeLabel { color: var(--accent) !important; }
 .flowchart .nodeLabel { color: var(--fg) !important; }
 .flowchart .node.skill .nodeLabel { color: var(--accent) !important; }
 .flowchart .flowchart-link { stroke: var(--fg-dim) !important; stroke-width: 1px !important; }
@@ -925,6 +883,8 @@ body.is-overview .progress { opacity: 0; pointer-events: none; }
     animation-duration: 1ms !important;
     transition-duration: 1ms !important;
   }
+  /* a cursor that stays lit */
+  .cursor::after { animation: none; }
 }
 
 /* ---------- print / PDF export (Ctrl+P) ------------------------------- */

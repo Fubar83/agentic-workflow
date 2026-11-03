@@ -1,6 +1,6 @@
 ---
 name: jira-plan
-description: 'Create one implementation plan for Jira stories across every repository in a feature folder. Use for Jira planning, phased implementation plans, acceptance criteria coverage, verification commands, and commit and PR suggestions. Interviews the user first, defers unresolved questions to the story as a single comment that the user approves before it is posted, and stops without implementing.'
+description: 'Create one implementation plan for Jira stories across every repository in a feature folder. Use for Jira planning, phased implementation plans, acceptance criteria coverage, verification commands, and commit and PR suggestions. Interviews the user first, defers unresolved questions to the story as a single comment, posted only once the user confirms it, and stops without implementing.'
 argument-hint: 'Jira key(s) and optional scope or constraints'
 ---
 
@@ -13,7 +13,8 @@ writes:
 1. The plan file.
 2. The `jira:` field in `FEATURE.md`, if it is empty and a key was given.
 3. One comment on the story, if any question is deferred and the user
-   approves its text.
+   confirms its text. It is saved as `.working-docs/<jira-key>-comment.md`
+   and posted from that file.
 
 Do not create branches, worktrees, commits, pull requests, or code changes.
 Do not include time, effort, or duration estimates.
@@ -74,8 +75,9 @@ If `.working-docs/<jira-key>.md` exists, build on it. Carry forward every
 decision it records, and do not reopen one unless the user asks.
 
 - **Blocked:** an earlier run stopped on open questions. Re-read the story,
-  including comments since that run, for answers. Ask only what is still
-  unanswered.
+  including comments since that run, for answers. A reply may name a
+  question and an option by number and letter, such as 1B, as the comment
+  asks. Ask only what is still unanswered.
 - **Ready:** the user wants the plan revised. Apply what they ask,
   investigating only what the change touches, and keep the rest, including
   phase statuses and the `Lessons` section.
@@ -275,44 +277,99 @@ phase detail.
 deferred questions go in that single comment, numbered. Never post one
 comment per question, and never post during the interview.
 
-The comment contains:
+Write it for team members who were not in the session, possibly reading on
+a phone. Lead with what they need to do, and keep every paragraph to a
+sentence or two. In this order:
 
-1. A short paragraph: what is being planned, and in which repositories.
-2. Decisions made, each with its reasoning, and any ADRs proposed.
-3. Provisional decisions, each with the cost of changing it.
-4. Open questions, numbered. For each: the context needed to answer it, the
-   options considered, and what each outcome would change. Write them so
-   that someone who was not in the session can answer without follow-up.
-5. The plan file path and the feature branch.
+1. **What is needed:** one bold line saying how many questions block the
+   story, then one sentence on what is being planned, and in which
+   repositories.
+2. **The questions,** numbered. For each: the question in bold, on its own
+   line; the context needed to answer it, in a sentence or two; then the
+   options as a list lettered A, B, C, each with what it would mean for
+   the implementation. If the plan favours one, say which and why, after
+   the list. Someone who was not in the session must be able to answer
+   without follow-up.
+3. **How to answer:** one line asking for the question's number and the
+   option's letter, such as 1B, or an answer of their own.
+4. **Decided:** each decision with its reasoning, and any ADRs proposed.
+5. **Going ahead unless someone objects:** the provisional decisions, each
+   with the cost of changing it later.
+6. **The plan:** its file path and the feature branch, on one line.
 
-Have the user approve the comment, as below, before anything is posted.
-Then report the plan path, the branch, the open questions, and whether the
-comment was posted, and stop. Do not implement or commit.
+Use Markdown: bold labels rather than headings, lists rather than tables,
+and backticks around code names, paths, and commands. Separate every block
+with a blank line, and write each paragraph and list item on one line;
+Jira wraps the text. The shape, with made-up content:
+
+```markdown
+**Two questions need answers before this story can be implemented.**
+
+The plan adds retries to failed dispatches, in `orders` and `dispatch`.
+
+**1. Who owns the dead-letter queue?**
+
+Failed dispatches land there after three retries. Only Dispatch reads it.
+
+- **A. Orders:** no change to Dispatch; Orders adds the alarm.
+- **B. Dispatch:** Dispatch takes over the queue and its alarm.
+
+The plan favours A: Orders already deploys the queue.
+
+**2. Is the old `/v1/dispatch` endpoint still called?**
+
+Nothing in our repositories calls it, but it is public.
+
+- **A. Yes:** keep it, and send it through the new retry.
+- **B. No:** remove it in this change.
+
+Reply with the number and letter, such as 1B, or with your own answer.
+
+**Decided**
+
+- Retry stays in Orders, which already owns the dispatch call.
+- No schema change: the retry count travels in the message.
+
+**Going ahead unless someone objects**
+
+- The helper is named `RetryPolicy`; renaming it later is cheap.
+
+Plan: `.working-docs/VFS-1234.md`, branch `feature/VFS-1234`.
+```
+
+Have the user confirm it, as below, before anything is posted. Then report
+the plan path, the branch, the open questions, and whether the comment was
+posted, and stop. Do not implement or commit.
 
 **If nothing is outstanding,** report that the plan is ready for review, with
 its path, the repositories, and the branch, and stop. Implementation starts
 when the user says so, usually after reviewing the plan.
 
-### Approve the comment
+### Confirm before posting
 
-Nothing goes to Jira until the user approves it, word for word. In yolo
-mode nothing else prompts before a post, so this step is what prevents one.
+Nothing goes to Jira until the user confirms the exact text. In yolo mode
+nothing else prompts before a post, so this step is what prevents one.
 
-1. Show the whole comment, exactly as it would be posted.
-2. Ask whether to post it as it is, or what to change. With a question tool
-   such as `ask_user`, the choices are **Post it** and **Don't post**, and
-   the user types changes in the tool's free-text input. Without one, ask
-   in plain text.
-3. On changes, revise the comment, show all of it again, and ask again.
-   Repeat until the user picks Post it or Don't post.
+1. Save the comment as `.working-docs/<jira-key>-comment.md`, next to the
+   plan. Show all of it as the team will read it, rendered rather than in
+   a code block, and say which story it goes on.
+2. Ask the user to confirm. With a question tool such as `ask_user`, the
+   choices are **Post it** and **Don't post**, and the user types changes
+   in the tool's free-text input. Without one, ask in plain text.
+3. On changes, revise the comment and its file, show all of it again, and
+   ask again. Only Post it, or a reply that says only to post, confirms.
+   A confirmation covers the text it was given for, never a revision.
 4. If a change answers a deferred question, record the answer in the plan
    as a decision and update the plan to match. In the comment, it moves
-   from the open questions to the decisions. If no question is left open,
-   post nothing, set the plan's first line to
+   from the questions to the decisions. If no question is left open,
+   delete the comment file, post nothing, set the plan's first line to
    `Plan status: ready to implement`, and close as when nothing is
    outstanding.
-5. On Post it, post the comment with `twg`, exactly as last shown. On Don't
-   post, post nothing. The plan stays blocked, and its open questions are
+5. On Post it, post the file with `twg jira workitem comment create`,
+   exactly as last shown. Set the body format to Markdown, since the
+   default may be HTML, and pass the file rather than inline text, so
+   quotes and backticks arrive intact. `--help` gives the flags. On Don't
+   post, post nothing. The plan stays blocked, and the saved comment is
    there for the user to take to the team another way.
 
 ## Output

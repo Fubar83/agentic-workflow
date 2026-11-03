@@ -180,9 +180,9 @@ backend, say so in the plan and in your report. Do not claim it works.
   asks to ship, run `jira-ship` and stop where it stops. It runs
   `jira-review` first if the change has moved on since the last review.
 - Never commit, push, or open a pull request except through `jira-ship`, and
-  never write to Jira except through `jira-plan` and `jira-refine`, which
-  post only what the user has approved. In yolo mode nothing prompts before
-  a push or a post, so these rules are what prevent one.
+  never write to Jira except through `jira-plan` and `jira-refine`, and
+  only once the user has confirmed the exact text. In yolo mode nothing
+  prompts before a push or a post, so these rules are what prevent one.
 
 ## Next step
 
@@ -203,7 +203,8 @@ it on the step just finished, or in a new session on the plan file:
 - **Code review with findings:** fix the ones the user picks, by number,
   or none.
 - **Code review findings fixed, or none to fix:** `/jira-ship`. It runs
-  `jira-review` again first if the fixes changed the code.
+  `jira-review` again first if the fixes changed the code. After fixes,
+  offer `/code-review` again as well, to review them.
 - **Shipped:** the user reviews and merges the pull requests in landing
   order. After fixes from review, `/jira-ship` again.
 

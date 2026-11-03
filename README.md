@@ -9,12 +9,12 @@ NOTES.md        speaker notes, one section per slide, then an appendix
 css/deck.css    theme and components
 js/deck.js      navigation
 js/pong.js      FSP playing pong on the closing slide
-js/flow.js      draws the Mermaid flowchart on slide 7
+js/flow.js      draws the Mermaid flowchart on slide 8
 agentic-setup/  the skills and agents the talk describes (see its README)
 ```
 
 No build step. Two Google Fonts and Mermaid, which draws the flowchart on
-slide 7, load from CDNs. Offline, the fonts fall back and slide 7 shows the
+slide 8, load from CDNs. Offline, the fonts fall back and slide 8 shows the
 loop as one line of text.
 
 ## Presenting
@@ -61,7 +61,7 @@ slide opens.
 
 Keep slide text short. Detail belongs in `NOTES.md`.
 
-The flowchart on slide 7 is Mermaid. Its source is the
+The flowchart on slide 8 is Mermaid. Its source is the
 `<script type="text/x-mermaid">` on that slide in `index.html`, and
 [mermaid.live](https://mermaid.live) previews it. Its colours come from
 `css/deck.css`, so it follows the theme.
@@ -77,11 +77,11 @@ The flowchart on slide 7 is Mermaid. Its source is the
 | `.ticks` | Short list with square markers |
 | `.bullets` | Icon, heading, and one line |
 | `.cols` + `.tool` | Cards side by side |
-| `.card` | Terminal-style panel |
-| `.code` | Code line; `.c` comment, `.s` string |
+| `.code` | Code or prompt text; `.c` dim, `.k` accent, `.s` string |
+| `.footnote` | Small monospace line under a block |
 | `.badge` | Small inline label |
 | `.cursor` | Blinking block cursor after the element |
-| `.pong` | Canvas for the pong game on the closing slide, drawn by `js/pong.js` |
+| `.card--pong` | C64-style screen for the pong game on the closing slide, drawn by `js/pong.js` |
 | `.flowchart` | Mermaid flowchart with a one-line fallback, drawn by `js/flow.js` |
 
 `css/deck.css` also contains `.agenda`, `.stack`, `.flow`, `.stats`, and
@@ -96,9 +96,9 @@ All colours are variables at the top of `css/deck.css`.
 - Square corners, hairline borders, and spaced monospace labels.
 - A fixed hairline frame, a faint background grid, and a slide number in the
   top margin.
-- Retro details: terminal cards in Commodore 64 colours (`--c64-*`), faint
-  CRT scanlines, a blinking cursor, and FSP playing pong on the closing
-  slide.
+- Retro details: faint CRT scanlines, `RUN` behind the demo title, and on
+  the closing slide a blinking cursor after `Ready.` and FSP playing pong on
+  a screen in Commodore 64 colours (`--c64-*`).
 
 Dark is the default. <kbd>T</kbd> switches to the light palette.
 

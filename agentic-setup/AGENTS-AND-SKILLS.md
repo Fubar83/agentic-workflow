@@ -282,7 +282,7 @@ every repository in the feature folder, after interviewing you on the
 questions that block it. It writes the plan and stops; it never
 implements. It makes at most three writes: the plan file, the `jira:` field
 in `FEATURE.md` if that is empty, and one Jira comment if a question is
-deferred and you approve the comment.
+deferred and you confirm it, saved next to the plan first.
 
 **How it does it.**
 
@@ -319,16 +319,20 @@ deferred and you approve the comment.
   phase and a check, a pull request title and description per repository,
   and the landing order.
 - **Stops either way.** If anything was deferred, it marks the plan
-  blocked and drafts one comment for the story: the decisions, the
-  provisional decisions, and the open questions, each with enough context
-  to answer it without follow-up. It stops once the comment is posted or
-  you decide against it. Otherwise it marks the plan ready and stops for
-  your review.
-- **Shows you the comment first.** It posts only when you choose Post it.
+  blocked and drafts one comment for the story: the open questions, the
+  decisions, and the provisional decisions. It stops once the comment is
+  posted or you decide against it. Otherwise it marks the plan ready and
+  stops for your review.
+- **Writes the comment to be read quickly.** It opens with how many
+  questions block the story. Each question is a bold line with enough
+  context to answer it without follow-up, then its options as a lettered
+  list with what each would change, so the team can answer with 1B.
+  Decisions follow, then what goes ahead unless someone objects.
+- **Waits for your confirmation.** It posts only when you choose Post it.
   You can type changes instead, and it shows the revised comment and asks
   again. An answer you give while refining becomes a decision in the plan;
   if no question is left, nothing is posted and the plan is ready. Don't
-  post leaves the plan blocked, with the questions in it.
+  post leaves the plan blocked, and the draft saved next to it.
 - **Resumes.** Run again, it builds on the saved plan, keeps its decisions,
   re-reads the story for answers, and asks only what is still open. On a
   ready plan, it applies the changes you ask for and keeps the rest.
@@ -344,8 +348,8 @@ deferred and you approve the comment.
   from it and an interrupted run can pick up from the file.
 - Deferred questions reach the team in one comment that can be answered
   without follow-up, and the next run picks the answers up from the story.
-- You approve that comment before the team sees it, and can sharpen it
-  first.
+- You confirm that comment before the team sees it, and can sharpen it
+  first. Lettered options make it quick to read and to answer.
 - Provisional decisions are shown too, in the pull request descriptions and
   in this comment when there is one, so the team can object without being
   asked to decide.
@@ -532,7 +536,7 @@ keys, before a refinement session. It needs no feature folder.
 against the code it would touch and drafts one comment per story with the
 questions that block implementation, the caveats, the special cases the
 acceptance criteria miss, and the likely reach. Each is posted once you
-approve it. It writes no plan and gives no estimate.
+confirm it. It writes no plan and gives no estimate.
 
 **How it does it.**
 
@@ -550,10 +554,11 @@ approve it. It writes no plan and gives no estimate.
   as first-run states, repeated requests, partial failure, permissions, and
   records that predate the change; and which repositories and services the
   work likely touches.
-- **Comments once per story.** Its understanding of the story, numbered
-  questions with why each matters, caveats and special cases, likely reach,
-  and one line on what code it read. It is written for someone who has not
-  seen the code, in a neutral tone. An earlier refinement comment is
+- **Comments once per story.** Its reading of the story; numbered
+  questions, each with why it matters and the likely answers as a lettered
+  list; caveats and special cases; likely reach; and one line on what code
+  it read. It is written for someone who has not seen the code, in a
+  neutral tone, to be read quickly. An earlier refinement comment is
   extended or corrected rather than repeated.
 - **Shows you each comment first.** With several stories, it drafts them
   all before asking anything, so you are not kept waiting. Then it shows
@@ -571,7 +576,7 @@ approve it. It writes no plan and gives no estimate.
   time goes to what changes the outcome.
 - The team sees the reach and the caveats before sizing, with no estimate
   made for them.
-- You approve each comment, and can change it, before the team sees it.
+- You confirm each comment, and can change it, before the team sees it.
 - The comment stays on the story, so when it is scheduled, `jira-plan`
   reads it, and the answers, with the rest of the story.
 
@@ -581,11 +586,11 @@ approve it. It writes no plan and gives no estimate.
 | --- | --- | --- | --- | --- |
 | Sol | In the feature folder | Keeps it current | Through `jira-ship` | Through the skills |
 | Luna | Assigned files | No | No | No |
-| `jira-plan` | No | Writes it | No | One approved comment, if deferred |
+| `jira-plan` | No | Writes it | No | One confirmed comment, if deferred |
 | `jira-review` | No | No | No | No |
 | `code-review` | No | No | No | No |
 | `jira-ship` | No | Pull request links | Commits, push, pull requests | No |
-| `jira-refine` | No | No | No | One approved comment per story |
+| `jira-refine` | No | No | No | One confirmed comment per story |
 
 `FEATURE.md` is written by `wag/feature-manifest.sh`; `jira-plan` only
 fills in its `jira:` field when that is empty.
