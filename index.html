@@ -41,14 +41,14 @@
   <section class="slide">
     <header class="slide__head">
       <span class="eyebrow">01 · The workflow</span>
-      <h2>Seven steps, story to pull requests</h2>
+      <h2>Story to PR</h2>
     </header>
     <ol class="steps steps--bare" data-anim>
       <li><h3>Feature folder <code>wag</code> <code>cpyolo</code></h3></li>
       <li><h3>Plan from the story <code>/jira-plan</code></h3></li>
       <li><h3>Review the plan</h3></li>
       <li><h3>Implement</h3></li>
-      <li><h3>Test by hand</h3></li>
+      <li><h3>Manual testing</h3></li>
       <li><h3>Review <code>/jira-review</code> <code>/code-review</code></h3></li>
       <li><h3>Ship <code>/jira-ship</code></h3></li>
     </ol>
@@ -108,13 +108,13 @@
     <div class="split__text">
       <header class="slide__head">
         <span class="eyebrow">04 · The plan</span>
-        <h2>The plan step closes the gaps</h2>
+        <h2>Questions first, then the plan</h2>
       </header>
       <div data-anim>
         <ul class="ticks">
-          <li>Only blocking questions are asked</li>
-          <li>Reversible ones are decided and listed</li>
-          <li>Every answer goes in the plan</li>
+          <li>Asks me what it cannot decide</li>
+          <li>Decides the small things itself</li>
+          <li>Writes every answer in the plan</li>
         </ul>
       </div>
     </div>
@@ -169,7 +169,7 @@ Which service owns the retry?
     <ul class="bullets" data-anim>
       <li>
         <span class="icon">▶</span>
-        <div><h3>Does it work?</h3><p>By hand, in Rider and the dev server.</p></div>
+        <div><h3>Does it work?</h3><p>Manual testing, when the change needs it.</p></div>
       </li>
       <li>
         <span class="icon">≡</span>
@@ -198,24 +198,29 @@ Which service owns the retry?
       <div data-anim>
         <ul class="ticks">
           <li>Gold: where I step in</li>
+          <li>Dashed: not always needed</li>
         </ul>
       </div>
     </div>
     <figure class="flowchart">
-      <p class="flowchart__fallback">Story → /jira-plan → answer → plan review → implement → test by hand → /jira-review → /code-review → /jira-ship → merge</p>
+      <p class="flowchart__fallback">Story → /jira-plan → answer → plan review → implement → manual testing → /jira-review → /code-review → manual review → /jira-ship → merge</p>
       <script type="text/x-mermaid">
 flowchart TB
   accTitle: From story to pull requests
-  accDescr: The story goes to /jira-plan, and its questions are answered. The plan is reviewed and approved, then Sol and Luna implement it. The change is tested by hand, checked with /jira-review and /code-review, shipped with /jira-ship, and the pull requests are merged.
+  accDescr: The story goes to /jira-plan, and its questions are answered. The plan is reviewed and approved, then Sol and Luna implement it. The change may be tested by hand, is checked with /jira-review and may be checked with /code-review, may be reviewed by hand, and is shipped with /jira-ship. Then the pull requests are merged.
 
   story["Story"]
   plan["/jira-plan"]:::skill
   ask["Answer"]:::you
-  review["Plan review"]:::focus
+  review["Plan review"]:::you
   build["Implement"]
-  test["Test by hand"]:::you
+  test["Manual testing"]:::you
   jr["/jira-review"]:::skill
   cr["/code-review"]:::skill
+  look["Manual review"]:::you
+
+  %% dashed: steps I do not always take
+  class test,cr,look optional
   ship["/jira-ship"]:::skill
   prs["Merge"]:::you
 
@@ -227,7 +232,8 @@ flowchart TB
   build ==> test
   test ==> jr
   jr ==> cr
-  cr ==> ship
+  cr ==> look
+  look ==> ship
   ship ==> prs
       </script>
     </figure>
@@ -239,11 +245,6 @@ flowchart TB
     <span class="rule"></span>
     <span class="eyebrow">Live</span>
     <h2 class="display">Demo</h2>
-    <ul class="ticks">
-      <li>One story, several repos</li>
-      <li>The plan and its questions</li>
-      <li>A question posted with twg</li>
-    </ul>
   </section>
 
   <!-- 10: what I like -->

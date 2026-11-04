@@ -18,7 +18,7 @@ answers 1A, and `providerdata` needs no change.
   - One story, several repos, start to finish.
 - `[Your opening hook, if you want one.]`
 
-## 2. Seven steps, story to pull requests
+## 2. Story to PR
 
 The outline. Name each step; the rest of the talk explains them in order.
 
@@ -30,7 +30,7 @@ The outline. Name each step; the rest of the talk explains them in order.
   - Where most of my time goes.
 - **Implement**
   - Sol and Luna, phase by phase. Nothing is committed yet.
-- **Test by hand**
+- **Manual testing**
   - Rider and the dev server. My step.
 - **Review** `/jira-review` `/code-review`
   - The plan first, then the code.
@@ -79,17 +79,18 @@ Each skill is a Markdown file. I type its name, or ask Sol in plain words.
   - Before refinement: reads a story against the code and posts its
     questions once I confirm. No feature folder, no plan.
 
-## 5. The plan step closes the gaps
+## 5. Questions first, then the plan
 
 The core of the talk. Take your time.
 
-- **Only blocking questions are asked**
-  - Schemas, contracts, ownership, security. The whole list, then one at a
-    time.
-- **Reversible ones are decided and listed**
-  - Naming, structure. Marked provisional, easy to change in review.
-- **Every answer goes in the plan**
-  - Detailed enough that a fresh session could implement from it.
+- **Asks me what it cannot decide**
+  - Things that are costly to get wrong, like an API or who owns what.
+    One question at a time, with options to pick from.
+- **Decides the small things itself**
+  - Things that are easy to change, like names. They are listed, so I
+    can change them in the plan review.
+- **Writes every answer in the plan**
+  - So nothing is lost, and a fresh session could pick it up.
 - **On screen:** question 1 of 2
   - A and B are its suggestions, C my own answer, D defers to the team.
   - I pick D. The next slide shows where it goes.
@@ -116,8 +117,9 @@ The core of the talk. Take your time.
 
 Nothing is committed before shipping, so fixes land in the same commits.
 
-- **Does it work?** By hand, in Rider and the dev server
-  - Sol does not start backends, so this is mine. Bugs go back to Sol.
+- **Does it work?** Manual testing, when the change needs it
+  - In Rider and the dev server; Sol does not start backends. Bugs go
+    back to Sol.
 - **Is it what we agreed?** `/jira-review`, against the plan
   - Phases, acceptance criteria, nothing extra. Also suggests changes to
     `AGENTS.md` from what the run learned.
@@ -132,25 +134,32 @@ Nothing is committed before shipping, so fixes land in the same commits.
 The happy path, straight down. The ways back are for telling, not drawing.
 
 - **Gold: where I step in**
-  - Answer, plan review, test by hand, merge.
-  - The plan review has the heavy frame: most of my work. A loop: Sol
-    changes the plan until I approve it.
+  - Answer, plan review, manual testing, manual review, merge.
+  - The plan review is most of my work. A loop: Sol changes the plan
+    until I approve it.
+  - Manual review: I read the diff and the review findings before
+    shipping.
+- **Dashed: not always needed**
+  - Manual testing, `/code-review` and manual review: I skip them when
+    the change is small or the checks cover it. `/jira-ship` still checks
+    against the plan.
 - If asked, the ways back:
   - Deferred questions go to the team; the answers go to `/jira-plan`.
   - Bugs and missing work go back to Implement.
   - `/code-review` comments: I pick the fixes, and it can run again.
-  - A small change can skip `/code-review`.
 
 ## 9. Demo
 
 `RUN` behind the title is how you started a program on a C64.
 
-- **One story, several repos**
-  - One feature folder, `cpyolo`, then `/jira-plan`.
-- **The plan and its questions**
-  - Answer some, defer one, then the plan review.
-- **A question posted with twg**
-  - Show the comment, confirm it, and the run stops.
+What to show, in order:
+
+- One story, several repos: one feature folder, `cpyolo`, then
+  `/jira-plan`.
+- The plan and its questions: answer some, defer one, then the plan
+  review.
+- A question posted with twg: show the comment, confirm it, and the run
+  stops.
 - `[Pick a story that spans at least two repos.]` No open questions is a
   valid outcome too. If it runs long, skip slide 10.
 

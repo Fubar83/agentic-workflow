@@ -665,13 +665,8 @@ code {
   stroke-width: 1px !important;
 }
 .flowchart .node.you rect { fill: var(--gold-dim) !important; stroke: var(--accent) !important; }
-/* the plan review, where most of my work is, gets a heavier frame */
-.flowchart .node.focus rect {
-  fill: var(--gold-dim) !important;
-  stroke: var(--accent) !important;
-  stroke-width: 3px !important;
-}
-.flowchart .node.focus .nodeLabel { color: var(--accent) !important; }
+/* steps I do not always take */
+.flowchart .node.optional rect { stroke-dasharray: 5 4 !important; }
 .flowchart .nodeLabel { color: var(--fg) !important; }
 .flowchart .node.skill .nodeLabel { color: var(--accent) !important; }
 .flowchart .flowchart-link { stroke: var(--fg-dim) !important; stroke-width: 1px !important; }
