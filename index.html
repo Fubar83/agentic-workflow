@@ -40,48 +40,60 @@
     </div>
   </section>
 
-  <!-- 2: the workflow as an outline, in the order the rest of the talk
-       follows, with the tool for each step -->
-  <section class="slide">
-    <header class="slide__head">
-      <span class="eyebrow">01 · The workflow</span>
-      <h2>Story to PR</h2>
-    </header>
-    <ol class="steps steps--bare" data-anim>
-      <li><h3>Feature folder <code>wag</code> <code>cpyolo</code></h3></li>
-      <li><h3>Plan from the story <code>/jira-plan</code></h3></li>
-      <li><h3>Review the plan</h3></li>
-      <li><h3>Implement</h3></li>
-      <li><h3>Manual testing</h3></li>
-      <li><h3>Review <code>/jira-review</code> <code>/code-review</code></h3></li>
-      <li><h3>Ship <code>/jira-ship</code></h3></li>
-    </ol>
+  <!-- 2: sandboxing. The container and the proxy are why yolo mode is
+       fine -->
+  <section class="slide slide--split">
+    <div class="split__text">
+      <header class="slide__head">
+        <span class="eyebrow">01 · Sandboxing</span>
+        <h2>Sandboxing</h2>
+      </header>
+      <div data-anim>
+        <ul class="ticks">
+          <li>Runs in a devcontainer</li>
+          <li>Internet only through a Squid proxy</li>
+          <li>No cloud credentials inside</li>
+          <li>So yolo mode is fine</li>
+        </ul>
+      </div>
+    </div>
+    <aside class="split__visual">
+      <pre class="code"><code><span class="k">devcontainer</span>
+  Copilot CLI, Sol, Luna
+  the repos, wag, twg
+        |
+<span class="k">Squid proxy</span>
+  approved domains only
+        |
+<span class="c">GitHub, Jira, Copilot</span></code></pre>
+    </aside>
   </section>
 
-  <!-- 3: the agents, side by side: what Sol does and what Luna does -->
-  <section class="slide">
-    <header class="slide__head">
-      <span class="eyebrow">02 · The agents</span>
-      <h2>Sol decides, Luna helps</h2>
-    </header>
-    <div class="cols" data-anim>
-      <article class="tool">
-        <span class="tool__name">Sol · the orchestrator</span>
+  <!-- 3: twg, Atlassian's Teamwork Graph CLI, in one slide -->
+  <section class="slide slide--split">
+    <div class="split__text">
+      <header class="slide__head">
+        <span class="eyebrow">02 · twg</span>
+        <h2>twg, the Atlassian CLI</h2>
+      </header>
+      <div data-anim>
         <ul class="ticks">
-          <li>Runs the skills and implements</li>
-          <li>Decides what to hand to Luna</li>
-          <li>Supervises Luna, checks everything</li>
+          <li>One CLI for Jira and Confluence</li>
+          <li>The agent reads and writes them itself</li>
+          <li>No copy-paste, nothing missed</li>
         </ul>
-      </article>
-      <article class="tool">
-        <span class="tool__name">Luna · the worker</span>
-        <ul class="ticks">
-          <li>One task, in one repo</li>
-          <li>Searches, writes code, runs tests</li>
-          <li>Reports back to Sol</li>
-        </ul>
-      </article>
+      </div>
     </div>
+    <aside class="split__visual">
+      <pre class="code"><code><span class="c">reads a story</span>
+twg jira workitem get
+
+<span class="c">posts a comment</span>
+twg jira workitem comment create
+
+<span class="c">Confluence too: we keep our</span>
+<span class="c">architecture pages up to date</span></code></pre>
+    </aside>
   </section>
 
   <!-- 4: the skills of the flow, in the order a story meets them, and
@@ -106,62 +118,50 @@
     </div>
   </section>
 
-  <!-- 5: the plan step, with the question as the prompt shows it. The
-       question deferred here is the first one in the comment on slide 6 -->
-  <section class="slide slide--split">
-    <div class="split__text">
-      <header class="slide__head">
-        <span class="eyebrow">04 · The plan</span>
-        <h2>Questions first, then the plan</h2>
-      </header>
-      <div data-anim>
-        <ul class="ticks">
-          <li>Asks me what it cannot decide</li>
-          <li>Decides the small things itself</li>
-          <li>Writes every answer in the plan</li>
-        </ul>
-      </div>
-    </div>
-    <aside class="split__visual">
-      <pre class="code"><code><span class="c">question 1 of 2</span>
-Which service owns the retry?
-
-<span class="k">A</span>  integration, as today
-<span class="k">B</span>  providerdata, new endpoint
-<span class="k">C</span>  your own answer
-<span class="k">D</span>  defer to the team</code></pre>
-    </aside>
+  <!-- 5: the workflow as an outline, in the order the rest of the talk
+       follows, with the tool for each step -->
+  <section class="slide">
+    <header class="slide__head">
+      <span class="eyebrow">04 · The workflow</span>
+      <h2>Story to PR</h2>
+    </header>
+    <ol class="steps steps--bare" data-anim>
+      <li><h3>Scope work</h3></li>
+      <li><h3>Plan from the story <code>/jira-plan</code></h3></li>
+      <li><h3>Review the plan</h3></li>
+      <li><h3>Implement</h3></li>
+      <li><h3>Manual testing</h3></li>
+      <li><h3>Review <code>/jira-review</code> <code>/code-review</code></h3></li>
+      <li><h3>Ship <code>/jira-ship</code></h3></li>
+    </ol>
   </section>
 
-  <!-- 6: twg, Atlassian's Teamwork Graph CLI. The skills read stories with
-       it and post only the comments I confirm. Question 1 is the one
-       deferred on slide 5; mirrored, so it does not repeat slide 5 -->
+  <!-- 6: the plan from the story: the Jira ID from the feature folder,
+       one plan out -->
   <section class="slide slide--split">
-    <aside class="split__visual">
-      <pre class="code"><code><span class="c">comment on VFS-1234</span>
-1. Which service owns the retry?
-   <span class="k">A</span>  integration, as today
-   <span class="k">B</span>  providerdata, new endpoint
-2. Is the old endpoint still in use?
-   <span class="k">A</span>  yes, keep it
-   <span class="k">B</span>  no, remove it
-
-<span class="c">Post it · Don't post</span></code></pre>
-    </aside>
     <div class="split__text">
       <header class="slide__head">
-        <span class="eyebrow">05 · twg</span>
-        <h2>Jira, through twg</h2>
+        <span class="eyebrow">05 · The story</span>
+        <h2>Plan from the story</h2>
       </header>
       <div data-anim>
-        <pre class="code"><code>twg jira workitem get VFS-1234</code></pre>
         <ul class="ticks">
-          <li>Reads the story and its comments</li>
-          <li>Deferred questions go back in one comment</li>
-          <li>Posted only when I confirm</li>
+          <li>The Jira ID, once</li>
+          <li>Nothing copied by hand</li>
+          <li>One plan for every repo</li>
         </ul>
       </div>
     </div>
+    <aside class="split__visual">
+      <pre class="code"><code>/jira-plan
+
+<span class="k">knows</span>   VFS-1234 from the feature
+<span class="k">reads</span>   the story, its comments
+        and acceptance criteria
+<span class="k">reads</span>   the code in every repo
+<span class="k">asks</span>    what it cannot decide
+<span class="k">writes</span>  <span class="c">.working-docs/VFS-1234.md</span></code></pre>
+    </aside>
   </section>
 
   <!-- 7: after implementing: test by hand, the two reviews, and shipping -->
@@ -251,24 +251,24 @@ flowchart TB
     <h2 class="display">Demo</h2>
   </section>
 
-  <!-- 10: what I like -->
+  <!-- 10: takeaways -->
   <section class="slide">
     <header class="slide__head">
       <span class="eyebrow">In closing</span>
-      <h2>What I like</h2>
+      <h2>Takeaways</h2>
     </header>
     <div class="cols" data-anim>
       <article class="tool">
-        <span class="tool__name">Yolo mode</span>
-        <p>No prompts to approve. Sol just gets on with it.</p>
+        <span class="tool__name">Build your tools</span>
+        <p>It is cheap to build the tools you need.</p>
       </article>
       <article class="tool">
-        <span class="tool__name">One plan</span>
-        <p>Straight from the Jira story, for the whole task.</p>
+        <span class="tool__name">Pick your models</span>
+        <p>Use what works for you. I use Sol 6.1 and Luna for most things.</p>
       </article>
       <article class="tool">
-        <span class="tool__name">In parallel</span>
-        <p>Several Jira stories at once, a feature folder each.</p>
+        <span class="tool__name">twg</span>
+        <p>A simple way to integrate with Atlassian.</p>
       </article>
     </div>
   </section>

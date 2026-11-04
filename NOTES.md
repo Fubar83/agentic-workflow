@@ -5,8 +5,7 @@ section per slide, numbered like the slide counter. Each bullet in bold is
 the text on the slide; the line under it is the reminder of what to say.
 
 The red thread is story VFS-1234, from the Jira ticket to the pull
-requests. Slide 5 defers the retry question, slide 6 posts it, the team
-answers 1A, and `providerdata` needs no change.
+requests.
 
 ---
 
@@ -16,49 +15,59 @@ answers 1A, and `providerdata` needs no change.
   - My agent, my skills and `twg`, on GitHub Copilot CLI.
 - **From Jira to pull requests**
   - One story, several repos, start to finish.
-- `[Your opening hook, if you want one.]`
 
-## 2. Story to PR
+Why I built it:
 
-The outline. Name each step; the rest of the talk explains them in order.
+- **Sandboxing came first**
+  - We started running the agent in devcontainers, behind a Squid proxy.
+  - Next I wanted to stop moving data between Jira and the agent by hand.
+- **Then I found `twg`**
+  - A CLI that talks to Jira and Confluence. It got me thinking: how can
+    this tool make my job more efficient?
+- **What `twg` gives me**
+  - No copy-pasting from the story, and no writing my own description of
+    the task and missing things.
+  - The agent reads the whole story, comments included, so it gets the
+    acceptance criteria and everything else.
+- **What sandboxing gives me**
+  - It is safe to run in yolo mode, so I babysit the agent less.
+- **The flow I wanted**
+  - Focus on the task for a while, then go and do other things while the
+    agent does its part.
 
-- **Feature folder** `wag` `cpyolo`
-  - A worktree per repo, same branch. Sol starts there.
-- **Plan from the story** `/jira-plan`
-  - Reads Jira and the code, asks me, writes the plan.
-- **Review the plan**
-  - Where most of my time goes.
-- **Implement**
-  - Sol and Luna, phase by phase. Nothing is committed yet.
-- **Manual testing**
-  - Rider and the dev server. My step.
-- **Review** `/jira-review` `/code-review`
-  - The plan first, then the code.
-- **Ship** `/jira-ship`
-  - Commits and pull requests in every repo, in one step.
+## 2. Sandboxing
 
-## 3. Sol decides, Luna helps
+Where it started. This is what makes the rest possible.
 
-Sol · the orchestrator
+- **Runs in a devcontainer**
+  - The agent, the repos and the tools live in the container, not on my
+    machine.
+- **Internet only through a Squid proxy**
+  - Only approved domains get through: GitHub, Jira, Copilot.
+- **No cloud credentials inside**
+  - Nothing in the container can reach our cloud accounts.
+- **So yolo mode is fine**
+  - No prompts to approve, so I babysit the agent less. Pushing happens
+    only in `/jira-ship`, by instruction.
+- **On screen:** the container, the proxy, and what is allowed out
 
-- **Runs the skills and implements**
-  - The agent I talk to. `cpyolo` starts it in yolo mode.
-- **Decides what to hand to Luna**
-  - Bounded work it can brief in a few lines.
-- **Supervises Luna, checks everything**
-  - Reruns the checks itself; a worker's "done" is not enough.
+## 3. twg, the Atlassian CLI
 
-Luna · the worker
+The next step after the sandbox: stop moving data between Atlassian and
+the agent by hand.
 
-- **One task, in one repo**
-  - Only Sol starts it. Workers in different repos run in parallel.
-- **Searches, writes code, runs tests**
-  - Only the files it was given. No git, no Jira.
-- **Reports back to Sol**
-  - Results only, so Sol's context stays on the plan.
-
-If asked: it runs in a container with no internet beyond approved domains,
-which is why yolo mode is fine. Pushing happens only in `/jira-ship`.
+- **One CLI for Jira and Confluence**
+  - The Teamwork Graph CLI, still in beta. When I found it, I started
+    thinking about how it could make my job more efficient.
+- **The agent reads and writes them itself**
+  - Jira: the whole story, with acceptance criteria, links and comments.
+  - Confluence: we use it to keep our architecture pages up to date.
+- **No copy-paste, nothing missed**
+  - No pasting from the story, and no writing my own description of the
+    task.
+- **On screen:** the two Jira commands the skills use, and Confluence
+  - One reads a story, one posts a comment. A comment is posted only
+    once I have seen it and confirmed it.
 
 ## 4. Four skills for the flow
 
@@ -79,39 +88,56 @@ Each skill is a Markdown file. I type its name, or ask Sol in plain words.
   - Before refinement: reads a story against the code and posts its
     questions once I confirm. No feature folder, no plan.
 
-## 5. Questions first, then the plan
+## 5. Story to PR
 
-The core of the talk. Take your time.
+The outline. Name each step; the rest of the talk explains them in order.
+I wanted clear steps: where I am needed, and where I am not.
 
-- **Asks me what it cannot decide**
-  - Things that are costly to get wrong, like an API or who owns what.
-    One question at a time, with options to pick from.
-- **Decides the small things itself**
-  - Things that are easy to change, like names. They are listed, so I
-    can change them in the plan review.
-- **Writes every answer in the plan**
-  - So nothing is lost, and a fresh session could pick it up.
-- **On screen:** question 1 of 2
-  - A and B are its suggestions, C my own answer, D defers to the team.
-  - I pick D. The next slide shows where it goes.
+- **Scope work**
+  - Sets up the folder structure, and a worktree per repo, with the same
+    branch name in all of them. The folder records the Jira ID.
+  - Custom tools are easy to make, so I made `wag` to fit my way of
+    working. It does all of this.
+  - `cpyolo` is my alias: it starts Copilot in yolo mode with my
+    preferred agent, Sol.
+- **Plan from the story** `/jira-plan`
+  - Reads Jira and the code, asks me, writes the plan. Up close on the
+    next slide.
+- **Review the plan**
+  - Where most of my time goes.
+- **Implement**
+  - Sol and Luna, phase by phase. Nothing is committed yet.
+  - If asked: Sol is the agent I talk to. It hands bounded tasks to Luna
+    workers, one repo each, and checks their work itself.
+- **Manual testing**
+  - Rider and the dev server. My step.
+- **Review** `/jira-review` `/code-review`
+  - The plan first, then the code.
+- **Ship** `/jira-ship`
+  - Commits and pull requests in every repo, in one step.
 
-## 6. Jira, through twg
+## 6. Plan from the story
 
-- **`twg jira workitem get VFS-1234`**
-  - Atlassian's Teamwork Graph CLI, in beta. All Jira access goes through
-    it.
-- **Reads the story and its comments**
-  - Description, acceptance criteria, links. An answer may already be
-    there.
-- **Deferred questions go back in one comment**
-  - Lettered options, so the team can answer "1A". The plan is saved as
-    blocked and the run stops.
-- **Posted only when I confirm**
-  - I see the exact text and can change it. Then Post it or Don't post.
-- **On screen:** the comment on VFS-1234
-  - Question 1 is the one deferred on the last slide.
-  - The team answers 1A: the retry stays in `integration`, and
-    `providerdata` is dropped. The next run asks only what is still open.
+The second step up close: what goes in, and what comes out.
+
+- **The Jira ID, once**
+  - I give it once, when I scope the work, and the feature folder
+    records it. `/jira-plan` needs no ID, and nor does any later step.
+- **Nothing copied by hand**
+  - It reads the whole story through `twg`, comments included. No
+    copy-pasting, and no acceptance criteria missed.
+- **One plan for every repo**
+  - One file for the whole task, outside the repos, so it is never
+    committed.
+- **On screen:** what it reads and writes
+  - The story and the code in every repo go in. It asks what it cannot
+    decide, then writes the plan.
+- If asked, the questions:
+  - Costly-to-change questions come to me one at a time, with options:
+    its suggestions, my own answer, or defer to the team.
+  - Small, easy-to-change choices it makes itself and lists in the plan.
+  - Deferred questions go to the story as one Jira comment, lettered so
+    the team can answer "1A". I confirm the text before it is posted.
 
 ## 7. Test, review, then ship
 
@@ -163,16 +189,20 @@ What to show, in order:
 - `[Pick a story that spans at least two repos.]` No open questions is a
   valid outcome too. If it runs long, skip slide 10.
 
-## 10. What I like
+## 10. Takeaways
 
-- **Yolo mode:** No prompts to approve. Sol just gets on with it.
-  - Safe because it runs in a container, and pushing only happens in
-    `/jira-ship`.
-- **One plan:** Straight from the Jira story, for the whole task.
-  - One file covers every repo, and every later step checks against it.
-- **In parallel:** Several Jira stories at once, a feature folder each.
-  - Own worktrees, own plan, own Sol. While one waits on the team or on
-    me, another moves on.
+- **Build your tools:** It is cheap to build the tools you need.
+  - `wag` and `cpyolo` fit my way of working. The skills are Markdown
+    files.
+- **Pick your models:** Use what works for you. I use Sol 6.1 and Luna for
+  most things.
+  - Try a few, and keep what gives you good results.
+- **twg:** A simple way to integrate with Atlassian.
+  - Jira and Confluence from the terminal, for you and for the agent.
+- If there is time, what I like most:
+  - Yolo mode in the sandbox: I babysit the agent less.
+  - One plan from the Jira story, for the whole task.
+  - Several stories in parallel, a feature folder each.
 - Limits: it depends on how well the story is written; backend checks are
   mine; pushing is always my decision.
 

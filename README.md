@@ -109,5 +109,6 @@ Dark is the default. <kbd>T</kbd> switches to the light palette.
 - [`wag`](https://github.com/fubar83/wag): my tool for creating feature
   folders with a worktree per repository.
 - [`twg`](https://developer.atlassian.com/cloud/twg-cli/): Atlassian's
-  Teamwork Graph CLI, used by the skills to read and comment on Jira.
+  Teamwork Graph CLI for Jira and Confluence. The skills use it to read
+  and comment on Jira.
 - `cpyolo`: my alias that starts Copilot CLI with the Sol agent in yolo mode.
