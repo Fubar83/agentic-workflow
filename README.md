@@ -21,6 +21,8 @@ loop as one line of text.
 
 Open `index.html` in a browser and press <kbd>F</kbd> for fullscreen. Keep
 `NOTES.md` open on a second screen; its sections match the slide counter.
+The slides stay 16:9, centred in any window, and scale with it, so they
+look the same on every screen.
 
 | Key | Action |
 | --- | --- |

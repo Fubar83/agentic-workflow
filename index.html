@@ -11,6 +11,10 @@
 </head>
 <body>
 
+<!-- the 16:9 stage, centred in the window; everything but the help panel
+     sits inside it -->
+<div class="stage">
+
 <!-- hairline frame with corner crosshairs, decoration only -->
 <div class="frame" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 
@@ -303,6 +307,9 @@ flowchart TB
 </footer>
 
 <button class="hint" id="hint" aria-label="Keyboard shortcuts">?</button>
+
+</div>
+
 <div class="help" id="help" hidden>
   <div class="help__panel">
     <h3>Shortcuts</h3>

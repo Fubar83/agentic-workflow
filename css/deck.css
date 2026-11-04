@@ -34,8 +34,11 @@
   --c64-text:   #b9adf7;   /* light blue, lifted to read well  */
   --c64-bright: #eeee77;   /* yellow                           */
 
-  /* geometry — square by design */
-  --pad: 7.5vw;
+  /* geometry — square by design. The stage is 16:9, as large as the
+     window allows; --sw and --sh are 1% of its width and height */
+  --sw: min(1vw, 16vh / 9);
+  --sh: min(1vh, 9vw / 16);
+  --pad: calc(7.5 * var(--sw));
   --measure: 72rem;
   --radius: 0;
   --ease: cubic-bezier(.22, .61, .36, 1);
@@ -62,8 +65,9 @@
 *, *::before, *::after { box-sizing: border-box; }
 
 html {
-  /* one knob scales the whole deck to the screen it is projected on */
-  font-size: clamp(13px, 0.72vw + 0.62vh, 23px);
+  /* one knob scales the whole deck with the stage, so a slide looks the
+     same at any size */
+  font-size: calc(0.72 * var(--sw) + 0.62 * var(--sh));
 }
 
 body {
@@ -170,6 +174,18 @@ strong { font-weight: 600; }
 .muted { color: var(--fg-dim); }
 
 /* ---------- deck + slides -------------------------------------------- */
+
+/* 16:9, centred. The transform makes it the containing block for the
+   fixed frame, deck and chrome inside it */
+.stage {
+  position: fixed;
+  left: 50%; top: 50%;
+  z-index: 1;
+  width: calc(100 * var(--sw));
+  height: calc(100 * var(--sh));
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+}
 
 .deck {
   position: fixed;
@@ -567,7 +583,7 @@ code {
   align-items: flex-start;
   gap: 1.5rem;
 }
-.slide--title.slide--split .display { font-size: clamp(3.8rem, 8vw, 6rem); }
+.slide--title.slide--split .display { font-size: clamp(3.8rem, 8 * var(--sw), 6rem); }
 
 /* the light-blue border of a C64 screen, around the field */
 .card {
@@ -577,7 +593,7 @@ code {
   box-shadow: 0 2rem 4rem rgba(0, 0, 0, .5);
 }
 /* 4:3, and never taller than the space between the frame margins */
-.card--pong { width: min(100%, calc((100vh - 18rem) * 4 / 3)); margin-inline: auto; }
+.card--pong { width: min(100%, calc((100 * var(--sh) - 18rem) * 4 / 3)); margin-inline: auto; }
 .pong { display: block; width: 100%; aspect-ratio: 4 / 3; }
 
 /* ---------- split ----------------------------------------------------- */
@@ -654,7 +670,7 @@ code {
   width: 100%;
   max-width: none !important;   /* Mermaid caps it at its drawn size */
   height: auto;
-  max-height: calc(100vh - 16rem);   /* the height between the margins */
+  max-height: calc(100 * var(--sh) - 16rem);   /* the height between the margins */
 }
 
 /* Mermaid writes its own colours; these use the tokens instead, so the
@@ -819,6 +835,12 @@ kbd {
 /* ---------- overview (press O) ---------------------------------------- */
 
 body.is-overview { overflow: auto; }
+body.is-overview .stage {
+  position: static;
+  width: auto; height: auto;
+  transform: none;
+  overflow: visible;
+}
 body.is-overview .frame { display: none; }
 body.is-overview .deck {
   position: static;
@@ -858,21 +880,6 @@ body.is-overview .slide[data-anim] > * {
 body.is-overview .chrome,
 body.is-overview .progress { opacity: 0; pointer-events: none; }
 
-/* ---------- small screens / portrait ---------------------------------- */
-
-@media (max-aspect-ratio: 1/1), (max-width: 900px) {
-  :root { --pad: 8vw; }
-  .frame { inset: 1.2rem; }
-  .slide { padding: 5.5rem var(--pad) 7rem; gap: 1.8rem; }
-  .display { font-size: 3.8rem; }
-  .slide--section .display { font-size: 4.2rem; }
-  .ghost { font-size: 11rem; opacity: .6; }
-  .slide__head h2, .split__text .slide__head h2 { font-size: 2.3rem; }
-  .slide--quote p { font-size: 2.1rem; }
-  .slide--split { grid-template-columns: 1fr; gap: 2rem; }
-  .split__visual { display: none; }
-}
-
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 1ms !important;
@@ -890,7 +897,8 @@ body.is-overview .progress { opacity: 0; pointer-events: none; }
   body::before, body::after, html::after { display: none; }
   .chrome, .progress, .hint, .help, .frame { display: none !important; }
   .cursor::after { display: none; }
-  .deck { position: static; }
+  .stage, .deck { position: static; }
+  .stage { width: auto; height: auto; transform: none; overflow: visible; }
   .slide {
     position: relative;
     inset: auto;
