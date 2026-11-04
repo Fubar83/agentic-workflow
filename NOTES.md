@@ -1,295 +1,183 @@
 # Speaker notes
 
-Slot: 20 to 30 minutes, about 100 engineers. Allow roughly 6 to 8 minutes for
-the demo (an estimate; time a run-through). Sections are numbered to match the
-slide counter.
+20 to 30 minutes, about 100 engineers; 6 to 8 of them for the demo. One
+section per slide, numbered like the slide counter. Each bullet in bold is
+the text on the slide; the line under it is the reminder of what to say.
 
-Text in `[brackets]` is for you to fill in. Everything else describes how the
-setup works. The appendix at the end describes each agent and skill, for
-questions afterwards.
-
-The red thread is one story, VFS-1234, followed from the Jira ticket to the
-pull requests. Slide 2 lists its seven steps, and the slides after it take
-them in that order: the agents and skills that do the work, the plan and
-its questions, Jira through `twg`, then testing, reviews, and shipping. The
-example carries through: slide 5 defers the retry question, slide 6 posts
-it, and when the team answers 1A, `providerdata` needs no change. Slide 8
-puts it all on one chart.
+The red thread is story VFS-1234, from the Jira ticket to the pull
+requests. Slide 5 defers the retry question, slide 6 posts it, the team
+answers 1A, and `providerdata` needs no change.
 
 ---
 
-## 1. Title
+## 1. My agentic workflow
 
-- What the talk covers: my agent, my skills, and `twg`, and how they take a
-  Jira story to pull requests across several repositories.
-- `[Your opening, if you want a personal hook: for example, the part of this
-  workflow you like most.]`
+- **My agentic workflow**
+  - My agent, my skills and `twg`, on GitHub Copilot CLI.
+- **From Jira to pull requests**
+  - One story, several repos, start to finish.
+- `[Your opening hook, if you want one.]`
 
 ## 2. Seven steps, story to pull requests
 
-Read the steps in order, with the tool beside each. Do not explain them yet;
-this slide is the outline, and the rest of the talk follows it.
+The outline. Name each step; the rest of the talk explains them in order.
 
-1. Feature folder, made with `wag`: one worktree per repository. Sol starts
-   there with `cpyolo`.
-2. A plan is built from the Jira story: `/jira-plan`.
-3. I review the plan.
-4. Sol implements it, with Luna workers. Nothing is committed yet.
-5. I test it by hand.
-6. Review: `/jira-review` against the plan, then `/code-review` (my own
-   skill).
-7. Ship: `/jira-ship`.
-
-Points to make:
-
-- The plan review (step 3) is where I spend my attention.
-- Shipping is one step: commits and pull requests in every repository.
-- After each step, Sol offers the next one as a choice. For a small change
-  it also offers to skip: implement without the plan review, or go
-  straight to `/jira-ship`, which skips `/code-review` and runs
-  `/jira-review` itself. The plan and the checks inside `/jira-ship` always
-  run.
+- **Feature folder** `wag` `cpyolo`
+  - A worktree per repo, same branch. Sol starts there.
+- **Plan from the story** `/jira-plan`
+  - Reads Jira and the code, asks me, writes the plan.
+- **Review the plan**
+  - Where most of my time goes.
+- **Implement**
+  - Sol and Luna, phase by phase. Nothing is committed yet.
+- **Test by hand**
+  - Rider and the dev server. My step.
+- **Review** `/jira-review` `/code-review`
+  - The plan first, then the code.
+- **Ship** `/jira-ship`
+  - Commits and pull requests in every repo, in one step.
 
 ## 3. Sol decides, Luna helps
 
-- The folder first: one per change, with a git worktree per repository, all
-  on the same branch name. `wag`, my own tool, creates it; `git worktree add`
-  does the same by hand. Main checkouts are never worked on directly.
-- The repositories in the story are real: `fsp-marketconfiguration-service`,
-  `fsp-providerdata-service`, `fsp-integration-service`.
-- `cpyolo` is my alias: it starts Copilot CLI with the Sol agent selected, in
-  yolo mode. Sol is the agent I talk to.
-- Sol's job: it runs the skills, from `/jira-plan` to `/jira-ship`, when I
-  type them or ask in plain words. It implements the approved plan phase by
-  phase, keeps the plan current, fixes the review findings I pick, and
-  offers the next step when one is done. It never commits outside
-  `/jira-ship`.
-- Sol decides what to hand off: anything bounded enough to brief in a few
-  lines. It keeps the key reasoning, putting the pieces together, and the
-  final look at the diff, and reruns the checks itself rather than trusting
-  a worker's "done".
-- Luna's job: one bounded task in one repository, and only when Sol starts
-  it. A broad search, one repository's slice of the implementation, test
-  design, a verification run, or an independent look at a diff. It edits
-  only the files it was given, leaves git and Jira alone, and does not start
-  workers of its own.
-- Planning and the reviews are skills, not agents: Sol runs them, and may
-  hand Luna the wide reading they need.
-- Workers in different repositories cannot conflict, so Sol starts them
-  together. Work that shares files or depends on order runs in sequence.
-- `[Confirm in a test run that Sol starts the workers together; /tasks
-  lists them. Copilot CLI runs subagents concurrently, but starting several
-  at once is the model's choice; /fleet asks for it explicitly.]`
-- Workers return only their results, which keeps Sol's context focused on the
-  plan. Sol does not accept a worker's "done" as verification. It reruns the
-  checks.
-- It all runs in a container with no internet beyond approved domains and no
-  cloud credentials, so the agent runs commands without asking me first.
-  Pushing happens only through `/jira-ship`. That is the agents'
-  instructions, not the sandbox: the container can reach GitHub.
+Sol · the orchestrator
+
+- **Runs the skills and implements**
+  - The agent I talk to. `cpyolo` starts it in yolo mode.
+- **Decides what to hand to Luna**
+  - Bounded work it can brief in a few lines.
+- **Supervises Luna, checks everything**
+  - Reruns the checks itself; a worker's "done" is not enough.
+
+Luna · the worker
+
+- **One task, in one repo**
+  - Only Sol starts it. Workers in different repos run in parallel.
+- **Searches, writes code, runs tests**
+  - Only the files it was given. No git, no Jira.
+- **Reports back to Sol**
+  - Results only, so Sol's context stays on the plan.
+
+If asked: it runs in a container with no internet beyond approved domains,
+which is why yolo mode is fine. Pushing happens only in `/jira-ship`.
 
 ## 4. Four skills for the flow
 
-- Each step is a skill: a Markdown file that Copilot CLI loads when I type
-  its name, or when Sol runs it. Top to bottom is the order a story meets
-  them.
-  - `/jira-plan` interviews me on the blocking questions, then plans every
-    repository at once.
-  - `/jira-review`, after implementing and testing: does the change match
-    the plan?
-  - `/code-review`, my own skill: side effects, regressions, bad code.
-  - `/jira-ship` commits and opens the pull requests.
-- `/jira-refine` is separate, not part of the flow from Jira to pull
-  requests. Before a refinement session it reads a story against the code
-  and posts the questions it finds, once I confirm them. It needs no
-  feature folder.
-- The plan is one Markdown file, `.working-docs/<jira-key>.md`, at the root
-  of the feature folder. That is outside every repository, so it is never
-  committed.
-- The first line says whether it is ready or blocked. Each phase has a
-  status: pending, done, or dropped with a reason. Sol updates them as work
-  lands, so an interrupted run can pick up from the file.
-- `/jira-review` checks the change against it. `/jira-ship` will not ship
-  while a phase is pending, commits phase by phase, and adds the pull request
-  links to it.
-- Sol also keeps a Lessons section in it: anything that cost a retry and
-  that a repository's instruction files would have prevented. That is where
-  `/jira-review`'s suggestions come from.
-- In the story, `providerdata` turns out to need no change once the team
-  answers the retry question, so its phase is dropped and it gets no pull
-  request. The next two slides show how that question was asked.
+Each skill is a Markdown file. I type its name, or ask Sol in plain words.
+
+- **`/jira-plan`** Interrogates me, then writes one plan for every repo
+  - Blocking questions only, before any code. One plan across the repos.
+- **`/jira-review`** After implementing: is it what the plan says?
+  - Every phase done, every acceptance criterion checked, nothing extra.
+- **`/code-review`** Then: is the code right?
+  - My own skill: side effects, regressions, bad code.
+- **`/jira-ship`** Commits and opens the pull requests
+  - A commit per phase, pull requests in merge order.
+- **The plan they share** `.working-docs/VFS-1234.md`
+  - Outside every repo, never committed. Ready or blocked; a status per
+    phase, so an interrupted run picks up from it.
+- **Separate, not part of the flow** `/jira-refine`
+  - Before refinement: reads a story against the code and posts its
+    questions once I confirm. No feature folder, no plan.
 
 ## 5. The plan step closes the gaps
 
-The core of the talk. Give it time.
+The core of the talk. Take your time.
 
-- The skill reads the story through `twg` and the code in every repository
-  in the folder. It writes one plan covering all of them.
-- It sorts questions first. Reversible ones (naming, structure) it decides
-  itself and records as provisional. Only blocking ones (schemas, contracts,
-  ownership, security) come to me.
-- It asks those before writing any phases: the whole list first, then one at
-  a time. Each comes with the options it suggests and what each means, and
-  "Defer to the team" last, which stops the run. I can also type my own
-  answer.
-- On screen: the first of two questions, which service owns the retry. A
-  and B are the options it suggests, C is my own answer, and D defers it to
-  the team. Here I pick D, and the next slide shows where it goes.
-- A free-text answer is recorded as a decision like the others. If it is
-  unclear or conflicts with the code, the agent asks a follow-up.
-- The plan is written so a fresh session can implement from it: side effects
-  per phase, current behaviour, patterns to follow, traps, out of scope.
-- Where a repository has ADRs, the plan follows the accepted ones, treats
-  going against one as a blocking question, and proposes a new or
-  superseding ADR when the change makes a decision worth recording.
+- **Only blocking questions are asked**
+  - Schemas, contracts, ownership, security. The whole list, then one at a
+    time.
+- **Reversible ones are decided and listed**
+  - Naming, structure. Marked provisional, easy to change in review.
+- **Every answer goes in the plan**
+  - Detailed enough that a fresh session could implement from it.
+- **On screen:** question 1 of 2
+  - A and B are its suggestions, C my own answer, D defers to the team.
+  - I pick D. The next slide shows where it goes.
 
 ## 6. Jira, through twg
 
-- `twg` is Atlassian's Teamwork Graph CLI, still in beta. The skills use it
-  for everything in Jira: `twg jira workitem get` reads a story, and
-  `twg jira workitem comment create` posts a comment.
-- `/jira-plan` and `/jira-refine` read the whole story through it:
-  description, acceptance criteria, linked issues, and comments, since a
-  question may already be answered there.
-- If any question is deferred, `/jira-plan` drafts one comment for the
-  story, with all the deferred questions in it. On screen, question 1 is
-  the one I deferred on the last slide.
-- It is written to be read quickly: how many questions block the story,
-  then each question with a line of context and its options lettered, so
-  the team can answer "1A". The decisions come after.
-- I see the comment before it is posted. I can type changes, and it shows
-  me the new version, until it says what I want. Nothing goes to Jira
-  until I confirm with Post it; the last line on screen is that choice.
-- The plan is saved, marked blocked, and the run stops. No implementation.
-- If nothing is deferred, the plan is marked ready and the run still stops,
-  for my review. I can ask for changes, and implementation starts when I say
-  so.
-- When the story has answers, the next run reads the saved plan, keeps its
-  decisions, and asks only what is still open. Here the team answers 1A,
-  so the retry stays in `integration` and `providerdata` needs no change.
-- `/jira-refine` posts the same way: one comment per story, confirmed first.
-  `/jira-ship` writes nothing to Jira.
+- **`twg jira workitem get VFS-1234`**
+  - Atlassian's Teamwork Graph CLI, in beta. All Jira access goes through
+    it.
+- **Reads the story and its comments**
+  - Description, acceptance criteria, links. An answer may already be
+    there.
+- **Deferred questions go back in one comment**
+  - Lettered options, so the team can answer "1A". The plan is saved as
+    blocked and the run stops.
+- **Posted only when I confirm**
+  - I see the exact text and can change it. Then Post it or Don't post.
+- **On screen:** the comment on VFS-1234
+  - Question 1 is the one deferred on the last slide.
+  - The team answers 1A: the retry stays in `integration`, and
+    `providerdata` is dropped. The next run asks only what is still open.
 
 ## 7. Test, review, then ship
 
-- First I test by hand: backends in Rider, front ends on the dev server
-  port. Sol does not start backends itself, so this step is mine. Bugs go
-  back to Sol.
-- Nothing is committed before shipping, so both reviews look at local
-  changes, and fixes end up in the same commits.
-- The order matters. First: did we solve it the way the plan says? Then:
-  does it have side effects, regressions, or bad code?
-- `/jira-review` checks the change against the plan: every phase done or
-  dropped with a reason, every acceptance criterion covered by a check that
-  ran, nothing in the diff that the plan did not call for. It uses the plan
-  rather than the story because the plan also holds the decisions from the
-  interview.
-- `/jira-review` also suggests changes to `AGENTS.md` and the other
-  instruction files, from what the run learned: a command that turned out to
-  be different, a convention found by trial. I decide which to take, and
-  accepted ones get their own commit.
-- `/code-review` then looks for side effects, regressions, and bad code: it
-  compares the change in every repository with main, committed or not, new
-  files included, and reads neither Jira nor the plan. It is my own skill,
-  and I run it myself. I pick the findings to fix, by number.
-- `/jira-ship` makes one commit per phase with the Jira key, opens pull
-  requests in merge order, and cross-links them. The descriptions carry the
-  decisions from the plan. It posts nothing to Jira. Pull request titles
-  end with the key, for example `(#VFS-1234)`.
-- `/jira-ship` runs `/jira-review` again first if anything changed since
-  the last review, such as fixes from `/code-review`. It stops if the plan
-  is blocked, a phase is unfinished, a repository has changes the plan does
-  not account for, or the review does not conform. Run again later, it
-  pushes to the same pull requests.
-- Each skill can be typed, or Sol runs it when asked in plain words, such as
-  "ship it".
+Nothing is committed before shipping, so fixes land in the same commits.
+
+- **Does it work?** By hand, in Rider and the dev server
+  - Sol does not start backends, so this is mine. Bugs go back to Sol.
+- **Is it what we agreed?** `/jira-review`, against the plan
+  - Phases, acceptance criteria, nothing extra. Also suggests changes to
+    `AGENTS.md` from what the run learned.
+- **Is the code right?** `/code-review`, against main
+  - Every repo, committed or not. Numbered findings; I pick the fixes.
+- **Ship it** `/jira-ship`: a commit per phase, pull requests in order
+  - Reruns `/jira-review` if the code changed. Decisions go in the pull
+    request descriptions; nothing goes to Jira.
 
 ## 8. From story to pull requests
 
-The whole loop on one slide, now that each part has been explained. Follow
-the thick line down, then point at the loops beside it. The left side of
-the slide is the legend.
+The happy path, straight down. The ways back are for telling, not drawing.
 
-- The thick line is the run when all goes well, from the story to the pull
-  requests.
-- Gold boxes are where I step in: answering the plan's questions, the plan
-  review, testing by hand, picking the fixes from `/code-review`, and
-  merging the pull requests.
-- The plan review, with the heavy frame, is where most of my work goes. It
-  is a loop, not a gate: Sol makes the changes I ask for in the plan and
-  records each as a decision, and I review it again until I approve. For
-  a bigger rethink I run `/jira-plan` again, which revises the plan and
-  keeps what was decided.
-- Questions I defer go to the team in a comment I confirm. When the team
-  has answered, the next run continues from the saved plan.
-- After implementing, I test by hand: backends in Rider, front ends on the
-  dev server port. Sol does not start backends itself, so this is my step.
-  Bugs go back to implementation.
-- `/jira-review` comes first: did we build what we agreed? If something is
-  missing, it goes back to implementation, and the change is reviewed again.
-- Then `/code-review`: side effects, regressions, bad code. If it has
-  comments, I pick the ones to fix and tell the agent to fix them. "again":
-  I can run `/code-review` a second time on the fixes. With no comments,
-  it goes straight to `/jira-ship`.
-- `/jira-ship` reviews against the plan again if the fixes changed
-  anything, then commits and opens the pull requests.
-- The dotted line: on a small change I can skip `/code-review`.
-  `/jira-ship` still runs `/jira-review` and the verification.
-- The chart is Mermaid, loaded from a CDN. Without a connection the slide
-  shows the steps as one line of text.
+- **Gold: where I step in**
+  - Answer, plan review, test by hand, merge.
+  - The plan review has the heavy frame: most of my work. A loop: Sol
+    changes the plan until I approve it.
+- If asked, the ways back:
+  - Deferred questions go to the team; the answers go to `/jira-plan`.
+  - Bugs and missing work go back to Implement.
+  - `/code-review` comments: I pick the fixes, and it can run again.
+  - A small change can skip `/code-review`.
 
 ## 9. Demo
 
 `RUN` behind the title is how you started a program on a C64.
 
-Before starting, say what to watch for:
-
-- One story, one folder spanning several repositories.
-- The plan's questions, and the plan review.
-- A question deferred to the team, posted with `twg` once I confirm it, and
-  the run stopping.
-
-`[Pick a story that spans at least two repositories, and decide in advance
-whether you expect a deferred question.]`
-
-If the plan comes back with no open questions, say so; that is a valid
-outcome. If the demo runs long, skip slide 10.
+- **One story, several repos**
+  - One feature folder, `cpyolo`, then `/jira-plan`.
+- **The plan and its questions**
+  - Answer some, defer one, then the plan review.
+- **A question posted with twg**
+  - Show the comment, confirm it, and the run stops.
+- `[Pick a story that spans at least two repos.]` No open questions is a
+  valid outcome too. If it runs long, skip slide 10.
 
 ## 10. What I like
 
-- Setup: one folder and one command, with every repository in it.
-- Questions: answered before any code is written, or handed to the team with
-  enough context to answer them.
-- Record: the plan's decisions travel with the pull requests when it
-  ships, and deferred questions go to the ticket through `twg` with the
-  decisions made so far.
-- `[Say what you like most, in your own words. If you have measured
-  anything, such as time from story to pull request, add the numbers.]`
+- **Yolo mode:** No prompts to approve. Sol just gets on with it.
+  - Safe because it runs in a container, and pushing only happens in
+    `/jira-ship`.
+- **One plan:** Straight from the Jira story, for the whole task.
+  - One file covers every repo, and every later step checks against it.
+- **In parallel:** Several Jira stories at once, a feature folder each.
+  - Own worktrees, own plan, own Sol. While one waits on the team or on
+    me, another moves on.
+- Limits: it depends on how well the story is written; backend checks are
+  mine; pushing is always my decision.
 
-Limits worth stating:
+## 11. Questions?
 
-- The result depends on how well the story is written.
-- Backend changes are verified by me, in Rider.
-- Pushing and opening pull requests are always my decision.
-
-## 11. Questions
-
-On screen: the letters of FSP play pong. Each side has three score slots,
-filled as that side scores, and the first to three wins. Then they line up
-as FSP again and start over. It runs only while this slide is open, and
-shows a still frame when the system asks for reduced motion.
-
-Likely questions, with factual answers:
-
-- **Can I use this?** The skills, `/code-review` included, and the agents
-  are Markdown files. The folder pattern works with plain `git worktree`;
-  `wag` is optional.
-- **What about secrets and data?** The container has no internet access
-  beyond approved domains and no cloud credentials. It can reach GitHub;
-  pushing outside `/jira-ship` is ruled out by instruction, not by the box.
-- **Does it work for small changes?** Yes. The plan's depth scales with the
-  risk of the change.
-- **How long did it take to set up?** `[Your answer.]`
+- **Ready.** and the pong screen
+  - The letters of FSP play pong, first to three, then start over.
+- Likely questions:
+  - **Can I use this?** The agents and skills are Markdown files. Plain
+    `git worktree` works instead of `wag`.
+  - **Secrets and data?** No internet beyond approved domains, no cloud
+    credentials. Pushing only in `/jira-ship`, by instruction.
+  - **Small changes?** Yes. The plan's depth scales with the risk.
+  - **How long did it take to set up?** `[Your answer.]`
 
 ---
 

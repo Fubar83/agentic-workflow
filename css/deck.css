@@ -675,7 +675,7 @@ code {
 .flowchart .nodeLabel { color: var(--fg) !important; }
 .flowchart .node.skill .nodeLabel { color: var(--accent) !important; }
 .flowchart .flowchart-link { stroke: var(--fg-dim) !important; stroke-width: 1px !important; }
-/* the main path (==>) carries the eye; the ways back stay thin */
+/* the path (==>) carries the eye */
 .flowchart .edge-thickness-thick { stroke: var(--fg) !important; stroke-width: 2px !important; }
 .flowchart marker path { fill: var(--fg-dim) !important; stroke: var(--fg-dim) !important; }
 .flowchart .edgeLabel,

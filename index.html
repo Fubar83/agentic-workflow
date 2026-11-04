@@ -186,8 +186,9 @@ Which service owns the retry?
     </ul>
   </section>
 
-  <!-- 8: the whole loop as a flowchart. js/flow.js draws the Mermaid
-       source below; the fallback line stays if Mermaid cannot load -->
+  <!-- 8: the happy path as a flowchart, with the steps where I step in
+       marked. js/flow.js draws the Mermaid source below; the fallback
+       line stays if Mermaid cannot load -->
   <section class="slide slide--split">
     <div class="split__text">
       <header class="slide__head">
@@ -197,8 +198,6 @@ Which service owns the retry?
       <div data-anim>
         <ul class="ticks">
           <li>Gold: where I step in</li>
-          <li>Thick: the usual path</li>
-          <li>Dotted: a small change skips review</li>
         </ul>
       </div>
     </div>
@@ -207,44 +206,29 @@ Which service owns the retry?
       <script type="text/x-mermaid">
 flowchart TB
   accTitle: From story to pull requests
-  accDescr: The story goes to /jira-plan, and its questions are answered. Deferred questions go to the team, whose answers come back to /jira-plan. In the plan review, Sol makes the changes asked for until the plan is approved; then Sol and Luna implement. The change is tested by hand, and bugs go back to implementation. /jira-review sends anything missing back to implementation. Then it goes on to /code-review, or skips that review and goes straight to /jira-ship. If /code-review has comments, the ones to fix are picked and fixed, and /code-review can run again; with no comments it goes straight on. /jira-ship checks the change against the plan again if it changed, opens the pull requests, and they are merged.
+  accDescr: The story goes to /jira-plan, and its questions are answered. The plan is reviewed and approved, then Sol and Luna implement it. The change is tested by hand, checked with /jira-review and /code-review, shipped with /jira-ship, and the pull requests are merged.
 
   story["Story"]
   plan["/jira-plan"]:::skill
   ask["Answer"]:::you
-  team["Team answers"]
   review["Plan review"]:::focus
   build["Implement"]
+  test["Test by hand"]:::you
   jr["/jira-review"]:::skill
   cr["/code-review"]:::skill
-  pick["Pick fixes"]:::you
-  fix["Fix"]
-  test["Test by hand"]:::you
   ship["/jira-ship"]:::skill
   prs["Merge"]:::you
 
-  %% the run when all goes well: thick, straight down
+  %% the run when all goes well, straight down; the ways back are told
   story ==> plan
   plan ==> ask
   ask ==> review
-  review ==>|approved| build
+  review ==> build
   build ==> test
   test ==> jr
-  jr ===>|review| cr
-  cr ==>|comments| pick
-  pick ==> fix
-  fix ==> ship
+  jr ==> cr
+  cr ==> ship
   ship ==> prs
-
-  %% the ways back, off to the side, and the shortcut for a small change
-  ask -->|deferred| team
-  team -->|answers| plan
-  review -->|changes| review
-  test -->|bugs| build
-  jr -->|missing| build
-  fix -->|again| cr
-  cr -->|no comments| ship
-  jr -.->|skip review| ship
       </script>
     </figure>
   </section>
@@ -270,16 +254,16 @@ flowchart TB
     </header>
     <div class="cols" data-anim>
       <article class="tool">
-        <span class="tool__name">Setup</span>
-        <p>One folder, one command, every repo.</p>
+        <span class="tool__name">Yolo mode</span>
+        <p>No prompts to approve. Sol just gets on with it.</p>
       </article>
       <article class="tool">
-        <span class="tool__name">Questions</span>
-        <p>Answered before any code is written.</p>
+        <span class="tool__name">One plan</span>
+        <p>Straight from the Jira story, for the whole task.</p>
       </article>
       <article class="tool">
-        <span class="tool__name">Record</span>
-        <p>The decisions travel with the pull requests.</p>
+        <span class="tool__name">In parallel</span>
+        <p>Several Jira stories at once, a feature folder each.</p>
       </article>
     </div>
   </section>
